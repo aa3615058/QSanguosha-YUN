@@ -104,7 +104,6 @@ SOURCES += \
     src/ui/table-pile.cpp \
     src/ui/timed-progressbar.cpp \
     src/ui/ui-utils.cpp \
-    src/package/assassins.cpp \
     src/package/bgm.cpp \
     src/package/boss.cpp \
     src/package/fire.cpp \
@@ -209,7 +208,6 @@ HEADERS += \
     src/core/record-analysis.h \
     src/package/hegemony.h \
     src/scenario/fancheng-scenario.h \
-    src/package/assassins.h \
     src/package/bgm.h \
     src/package/boss.h \
     src/package/fire.h \

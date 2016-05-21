@@ -48,7 +48,7 @@ config = {
 		"YJCM2013",
 		"YJCM2014",
 		"YJCM2015",
-		"Assassins",
+--		"Assassins",
 		"Special3v3",
 		"Special3v3Ext",
 		"Special1v1",
