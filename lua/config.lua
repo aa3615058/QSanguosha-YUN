@@ -59,7 +59,7 @@ config = {
 		"TaiwanYJCM" ,
 		"Miscellaneous",
 		"BGM",
-		"BGMDIY",
+--		"BGMDIY",
 --		"Ling",
 		"Hegemony",
 		"HFormation",

@@ -197,10 +197,6 @@ return {
 	["&pr_nos_simayi"] = "司马懿",
 	["illustrator:pr_nos_simayi"] = "YOCO",
 
-	["diy_zhugeke"] = "诸葛恪-贴纸",
-	["&diy_zhugeke"] = "诸葛恪",
-	["illustrator:diy_zhugeke"] = "大佬荣",
-
 	["ol_fazheng"] = "OL法正",
 	["&ol_fazheng"] = "法正",
 	["illustrator:ol_fazheng"] = "L",
