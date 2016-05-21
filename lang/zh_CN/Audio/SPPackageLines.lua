@@ -183,21 +183,6 @@ return {
 	["~shenlvbu2"] = "什么？我败了？！",
 	["$StageChange"] = "杂鱼们，好戏才刚刚开始！",
 
-	--旱魃
-	["$fentian1"] = "烈火燎原，焚天灭地！",
-	["$fentian2"] = "骄阳似火，万物无生！",
-	["$zhiri1"] = "你以为，这样就已经结束了？",
-	["$zhiri2"] = "好舒服！这太阳的力量！",
-	["$xintan1"] = "人人心中，都有一团欲望之火！",
-	["$xintan2"] = "让心中之火慢慢吞噬你吧！哈哈哈哈哈哈！",
-	["~hanba"] = "应龙，是你在呼唤我吗？",
-
-
-	["cv:caesar"] = "English Listening 900",
-	["$conqueror1"] = "Please give me a piece of pie.",
-	["$conqueror2"] = "Will you be here at ten o'clock tomorrow? ",
-	["$conqueror3"] = "I'd rather have some tea,if you don't mind. ",
-	["~caesar"] = "Let's talk about something else.",
 	-- 孙皓
 		["$canshi1"] = "众人与蝼蚁何异？哼哼哼哼!",
 		["$canshi2"] = "难道，一切不在朕手中？",

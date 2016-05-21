@@ -71,22 +71,6 @@ return {
 	["&ganfuren"] = "甘夫人",
 	["illustrator:sp_ganfuren"] = "琛·美弟奇",
 
-	["wz_nos_daqiao"] = "王战大乔",
-	["&wz_nos_daqiao"] = "大乔",
-	["illustrator:wz_nos_daqiao"] = "Natsu",
-
-	["wz_xiaoqiao"] = "王战小乔",
-	["&wz_xiaoqiao"] = "小乔",
-	["illustrator:wz_xiaoqiao"] = "Natsu",
-
-	["pr_shencaocao"] = "PR神曹操",
-	["&pr_shencaocao"] = "神曹操",
-	["illustrator:pr_shencaocao"] = "陈岳",
-
-	["pr_nos_simayi"] = "PR司马懿",
-	["&pr_nos_simayi"] = "司马懿",
-	["illustrator:pr_nos_simayi"] = "YOCO",
-
 	["ol_fazheng"] = "OL法正",
 	["&ol_fazheng"] = "法正",
 	["illustrator:ol_fazheng"] = "L",

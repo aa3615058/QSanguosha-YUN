@@ -14,14 +14,6 @@ public:
     SPPackage();
 };
 
-class MiscellaneousPackage : public Package
-{
-    Q_OBJECT
-
-public:
-    MiscellaneousPackage();
-};
-
 class SPCardPackage : public Package
 {
     Q_OBJECT
@@ -195,17 +187,6 @@ public:
     bool targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *) const;
     bool targetsFeasible(const QList<const Player *> &targets, const Player *) const;
     void use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const;
-    void onEffect(const CardEffectStruct &effect) const;
-};
-
-class XintanCard : public SkillCard
-{
-    Q_OBJECT
-
-public:
-    Q_INVOKABLE XintanCard();
-
-    bool targetFilter(const QList<const Player *> &targets, const Player *, const Player *) const;
     void onEffect(const CardEffectStruct &effect) const;
 };
 
