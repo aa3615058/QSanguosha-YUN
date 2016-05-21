@@ -32,7 +32,7 @@ config = {
 		"New3v3Card",
 		"New3v3_2013Card",
 		"New1v1Card",
-		"YitianCard",
+	--	"YitianCard",
 	--	"Joy",
 		"Disaster",
 		"JoyEquip",
@@ -60,7 +60,7 @@ config = {
 		"Miscellaneous",
 		"BGM",
 		"BGMDIY",
-		"Ling",
+--		"Ling",
 		"Hegemony",
 		"HFormation",
 		"HMomentum",
@@ -73,8 +73,8 @@ config = {
 		"NostalYJCM2013",
 		"JianGeDefense",
 		"BossMode",
-		"Yitian",
-		"Wisdom",
+--		"Yitian",
+--		"Wisdom",
 		"Test"
 	},
 

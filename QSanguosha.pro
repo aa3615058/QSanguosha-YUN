@@ -112,13 +112,10 @@ SOURCES += \
     src/package/h-momentum.cpp \
     src/package/jiange-defense.cpp \
     src/package/joy.cpp \
-    src/package/ling.cpp \
     src/package/mountain.cpp \
     src/package/sp.cpp \
     src/package/special1v1.cpp \
     src/package/special3v3.cpp \
-    src/package/wisdom.cpp \
-    src/package/yitian.cpp \
     src/package/yjcm.cpp \
     src/package/yjcm2012.cpp \
     src/package/yjcm2013.cpp \
@@ -220,13 +217,10 @@ HEADERS += \
     src/package/h-momentum.h \
     src/package/jiange-defense.h \
     src/package/joy.h \
-    src/package/ling.h \
     src/package/mountain.h \
     src/package/sp.h \
     src/package/special1v1.h \
     src/package/special3v3.h \
-    src/package/wisdom.h \
-    src/package/yitian.h \
     src/package/yjcm.h \
     src/package/yjcm2012.h \
     src/package/yjcm2013.h \
