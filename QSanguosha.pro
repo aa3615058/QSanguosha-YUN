@@ -122,7 +122,6 @@ SOURCES += \
     src/package/yjcm2015.cpp \
     swig/sanguosha_wrap.cxx \
     src/dialog/banipdialog.cpp \
-    src/package/tw.cpp \
     src/package/ol.cpp \
     src/package/jsp.cpp \
     src/dialog/mainwindowserverlist.cpp \
@@ -236,7 +235,6 @@ HEADERS += \
     src/package/thicket.h \
     src/package/wind.h \
     src/dialog/banipdialog.h \
-    src/package/tw.h \
     src/package/ol.h \
     src/package/jsp.h \
     src/pch.h \
