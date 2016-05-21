@@ -283,44 +283,6 @@ return {
 	-- Test
 	["test"] = "测试",
 
-	["zhiba_sunquan"] = "制霸孙权",
-	["&zhiba_sunquan"] = "孙权",
-	["super_zhiheng"] = "制衡",
-	[":super_zhiheng"] = "出牌阶段限X+1次，你可以弃置至少一张牌：若如此做，你摸等量的牌。（X为你已损失的体力值）",
-
-	["wuxing_zhugeliang"] = "五星诸葛",
-	["&wuxing_zhugeliang"] = "诸葛亮",
-	["super_guanxing"] = "观星",
-	[":super_guanxing"] = "准备阶段开始时，你可以观看牌堆顶的五张牌，然后将任意数量的牌置于牌堆顶，将其余的牌置于牌堆底。",
-
-	["super_yuanshu"] = "测试袁术",
-	["&super_yuanshu"] = "袁术",
-	["illustrator:super_yuanshu"] = "吴昊",
-	["super_yongsi"] = "庸肆",
-	[":super_yongsi"] = "锁定技。摸牌阶段，你额外摸X张牌。弃牌阶段开始时，你须弃置X张牌。",
-
-	["super_caoren"] = "测试曹仁",
-	["&super_caoren"] = "曹仁",
-	["super_jushou"] = "据守",
-	[":super_jushou"] = "结束阶段开始时，你可以摸X张牌，然后将武将牌翻面。",
-
-	["super_max_cards"] = "手牌上限",
-	["super_offensive_distance"] = "距离-X",
-	["super_defensive_distance"] = "距离+X",
-
-	["#gaodayihao"] = "神威如龙",
-	["gaodayihao"] = "高达一号",
-	["illustrator:gaodayihao"] = "巴萨小马",
-	["gdjuejing"] = "绝境",
-	[":gdjuejing"] = "锁定技。摸牌阶段，你不摸牌。每当你的手牌数变化后，若你的手牌数不为4，你须将手牌补至或弃置至四张。",
-	["#GdJuejing"] = "%from 的“%arg”被触发，摸牌阶段不摸牌",
-	["gdlonghun"] = "龙魂",
-	[":gdlonghun"] = "你可以将一张牌按以下规则使用或打出：红桃当【桃】；方块当火【杀】；黑桃当【无懈可击】；梅花当【闪】。准备阶段开始时，若其他角色的装备区内有【青釭剑】，你可以获得之。",
-
-	["nobenghuai_dongzhuo"] = "无崩董卓",
-	["&nobenghuai_dongzhuo"] = "董卓",
-	["illustrator:nobenghuai_dongzhuo"] = "小冷",
-
 	["#sujiang"] = "金童",
 	["sujiang"] = "士兵(男)",
 	["&sujiang"] = "士兵",

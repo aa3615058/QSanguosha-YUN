@@ -2861,33 +2861,6 @@ void StandardPackage::addGenerals()
     skills << new Xiaoxi << new NonCompulsoryInvalidity << new Jianyan;
 }
 
-class SuperZhiheng : public Zhiheng
-{
-public:
-    SuperZhiheng() :Zhiheng()
-    {
-        setObjectName("super_zhiheng");
-    }
-
-    bool isEnabledAtPlay(const Player *player) const
-    {
-        return player->canDiscard(player, "he") && player->usedTimes("ZhihengCard") < (player->getLostHp() + 1);
-    }
-};
-
-class SuperGuanxing : public Guanxing
-{
-public:
-    SuperGuanxing() : Guanxing()
-    {
-        setObjectName("super_guanxing");
-    }
-
-    int getGuanxingNum(Room *) const
-    {
-        return 5;
-    }
-};
 
 class SuperMaxCards : public MaxCardsSkill
 {
@@ -2933,131 +2906,6 @@ public:
             return to->getMark("@defensive_distance_test");
         else
             return 0;
-    }
-};
-
-class SuperYongsi : public Yongsi
-{
-public:
-    SuperYongsi() : Yongsi()
-    {
-        setObjectName("super_yongsi");
-    }
-
-    int getKingdoms(ServerPlayer *yuanshu) const
-    {
-        return yuanshu->getMark("@yongsi_test");
-    }
-};
-
-class SuperJushou : public Jushou
-{
-public:
-    SuperJushou() : Jushou()
-    {
-        setObjectName("super_jushou");
-    }
-
-    int getJushouDrawNum(ServerPlayer *caoren) const
-    {
-        return caoren->getMark("@jushou_test");
-    }
-};
-
-class GdJuejing : public TriggerSkill
-{
-public:
-    GdJuejing() : TriggerSkill("gdjuejing")
-    {
-        events << CardsMoveOneTime;
-        frequency = Compulsory;
-    }
-
-    bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *gaodayihao, QVariant &data) const
-    {
-        if (triggerEvent == CardsMoveOneTime) {
-            CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
-            if (move.from != gaodayihao && move.to != gaodayihao)
-                return false;
-            if (move.to_place != Player::PlaceHand && !move.from_places.contains(Player::PlaceHand))
-                return false;
-        }
-        if (gaodayihao->getHandcardNum() == 4)
-            return false;
-        int diff = abs(gaodayihao->getHandcardNum() - 4);
-        if (gaodayihao->getHandcardNum() < 4) {
-            room->sendCompulsoryTriggerLog(gaodayihao, objectName());
-            gaodayihao->drawCards(diff, objectName());
-        } else if (gaodayihao->getHandcardNum() > 4) {
-            room->sendCompulsoryTriggerLog(gaodayihao, objectName());
-            room->askForDiscard(gaodayihao, objectName(), diff, diff);
-        }
-
-        return false;
-    }
-};
-
-class GdJuejingSkipDraw : public DrawCardsSkill
-{
-public:
-    GdJuejingSkipDraw() : DrawCardsSkill("#gdjuejing")
-    {
-    }
-
-    int getPriority(TriggerEvent) const
-    {
-        return 1;
-    }
-
-    int getDrawNum(ServerPlayer *gaodayihao, int) const
-    {
-        LogMessage log;
-        log.type = "#GdJuejing";
-        log.from = gaodayihao;
-        log.arg = "gdjuejing";
-        gaodayihao->getRoom()->sendLog(log);
-
-        return 0;
-    }
-};
-
-class GdLonghun : public Longhun
-{
-public:
-    GdLonghun() : Longhun()
-    {
-        setObjectName("gdlonghun");
-    }
-
-    int getEffHp(const Player *) const
-    {
-        return 1;
-    }
-};
-
-class GdLonghunDuojian : public TriggerSkill
-{
-public:
-    GdLonghunDuojian() : TriggerSkill("#gdlonghun-duojian")
-    {
-        events << EventPhaseStart;
-    }
-
-    bool trigger(TriggerEvent, Room *room, ServerPlayer *gaodayihao, QVariant &) const
-    {
-        if (gaodayihao->getPhase() == Player::Start) {
-            foreach (ServerPlayer *p, room->getOtherPlayers(gaodayihao)) {
-                if (p->getWeapon() && p->getWeapon()->isKindOf("QinggangSword")) {
-                    if (room->askForSkillInvoke(gaodayihao, "gdlonghun")) {
-                        room->broadcastSkillInvoke("gdlonghun", 5);
-                        gaodayihao->obtainCard(p->getWeapon());
-                    }
-                    break;
-                }
-            }
-        }
-
-        return false;
     }
 };
 
@@ -3192,42 +3040,8 @@ public:
 TestPackage::TestPackage()
     : Package("test")
 {
-    // for test only
-    General *zhiba_sunquan = new General(this, "zhiba_sunquan$", "wu", 4, true, true);
-    zhiba_sunquan->addSkill(new SuperZhiheng);
-    zhiba_sunquan->addSkill("jiuyuan");
-
-    General *wuxing_zhuge = new General(this, "wuxing_zhugeliang", "shu", 3, true, true);
-    wuxing_zhuge->addSkill(new SuperGuanxing);
-    wuxing_zhuge->addSkill("kongcheng");
-
-    General *gaodayihao = new General(this, "gaodayihao", "god", 1, true, true);
-    gaodayihao->addSkill(new GdJuejing);
-    gaodayihao->addSkill(new GdJuejingSkipDraw);
-    gaodayihao->addSkill(new GdLonghun);
-    gaodayihao->addSkill(new GdLonghunDuojian);
-    related_skills.insertMulti("gdjuejing", "#gdjuejing");
-    related_skills.insertMulti("gdlonghun", "#gdlonghun-duojian");
-
-    General *super_yuanshu = new General(this, "super_yuanshu", "qun", 4, true, true);
-    super_yuanshu->addSkill(new SuperYongsi);
-    super_yuanshu->addSkill(new MarkAssignSkill("@yongsi_test", 4));
-    related_skills.insertMulti("super_yongsi", "#@yongsi_test-4");
-    super_yuanshu->addSkill("weidi");
-
-    General *super_caoren = new General(this, "super_caoren", "wei", 4, true, true);
-    super_caoren->addSkill(new SuperJushou);
-    super_caoren->addSkill(new MarkAssignSkill("@jushou_test", 5));
-    related_skills.insertMulti("super_jushou", "#@jushou_test-5");
-
-    General *nobenghuai_dongzhuo = new General(this, "nobenghuai_dongzhuo$", "qun", 4, true, true);
-    nobenghuai_dongzhuo->addSkill("jiuchi");
-    nobenghuai_dongzhuo->addSkill("roulin");
-    nobenghuai_dongzhuo->addSkill("baonue");
-
     new General(this, "sujiang", "god", 5, true, true);
     new General(this, "sujiangf", "god", 5, false, true);
-
     new General(this, "anjiang", "god", 4, true, true, true);
 
     skills << new SuperMaxCards << new SuperOffensiveDistance << new SuperDefensiveDistance;
