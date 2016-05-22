@@ -47,29 +47,9 @@ return {
 	["illustrator:sp_shenlvbu"] = "干橘子",
 	["$ShenfenAnimateSP"] = "image=image/animate/shenfenSP.png",
 
-	["sp_yuejin"] = "乐进",
-	["&yuejin"] = "乐进",
-	["illustrator:sp_yuejin"] = "巴萨小马",
-
-	["sp_panfeng"] = "潘凤",
-	["&panfeng"] = "潘凤",
-	["illustrator:sp_panfeng"] = "G.G.G.",
-
 	["sp_zhugejin"] = "SP诸葛瑾",
 	["&sp_zhugejin"] = "诸葛瑾",
 	["illustrator:sp_zhugejin"] = "G.G.G.",
-
-	["sp_dingfeng"] = "丁奉",
-	["&dingfeng"] = "丁奉",
-	["illustrator:sp_dingfeng"] = "G.G.G.",
-
-	["sp_hetaihou"] = "何太后",
-	["&hetaihou"] = "何太后",
-	["illustrator:sp_hetaihou"] = "琛·美弟奇",
-
-	["sp_ganfuren"] = "甘夫人",
-	["&ganfuren"] = "甘夫人",
-	["illustrator:sp_ganfuren"] = "琛·美弟奇",
 
 	["ol_fazheng"] = "OL法正",
 	["&ol_fazheng"] = "法正",
@@ -83,49 +63,4 @@ return {
 	["ol_guanxingzhangbao"] = "OL关兴＆张苞",
 	["&ol_guanxingzhangbao"] = "关兴张苞",
 	["illustrator:ol_guanxingzhangbao"] = "HOOO",
-
-
-
-	-- Hegemony SP
-	["hegemony_sp"] = "国战SP",
-
-	["sp_heg_zhouyu"] = "SP周瑜-国",
-	["&sp_heg_zhouyu"] = "周瑜",
-	["illustrator:sp_heg_zhouyu"] = "牧童的短笛",
-
-	["sp_heg_xiaoqiao"] = "SP小乔-国",
-	["&sp_heg_xiaoqiao"] = "小乔",
-	["illustrator:sp_heg_zhouyu"] = "牧童的短笛",
-
-	["heg_caopi"] = "曹丕-国",
-	["&heg_caopi"] = "曹丕",
-	["illustrator:heg_caopi"] = "DH",
-
-	["heg_zhenji"] = "甄姬-国",
-	["&heg_zhenji"] = "甄姬",
-	["illustrator:heg_zhenji"] = "DH",
-
-	["heg_zhugeliang"] = "诸葛亮-国",
-	["&heg_zhugeliang"] = "诸葛亮",
-	["illustrator:heg_zhugeliang"] = "木美人",
-
-	["heg_huangyueying"] = "黄月英-国",
-	["&heg_huangyueying"] = "黄月英",
-	["illustrator:heg_huangyueying"] = "木美人",
-
-	["heg_zhouyu"] = "周瑜-国",
-	["&heg_zhouyu"] = "周瑜",
-	["illustrator:heg_zhouyu"] = "苍月白龙",
-
-	["heg_xiaoqiao"] = "小乔-国",
-	["&heg_xiaoqiao"] = "小乔",
-	["illustrator:heg_xiaoqiao"] = "苍月白龙",
-
-	["heg_lvbu"] = "吕布-国",
-	["&heg_lvbu"] = "吕布",
-	["illustrator:heg_lvbu"] = "LiuHeng",
-
-	["heg_diaochan"] = "貂蝉-国",
-	["&heg_diaochan"] = "貂蝉",
-	["illustrator:heg_diaochan"] = "LiuHeng",
 }

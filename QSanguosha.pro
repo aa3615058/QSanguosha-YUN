@@ -93,7 +93,6 @@ SOURCES += \
     src/util/nativesocket.cpp \
     src/util/recorder.cpp \
     src/core/record-analysis.cpp \
-    src/package/hegemony.cpp \
     src/scenario/fancheng-scenario.cpp \
     src/core/room-state.cpp \
     src/core/wrapped-card.cpp \
@@ -107,8 +106,6 @@ SOURCES += \
     src/package/bgm.cpp \
     src/package/boss.cpp \
     src/package/fire.cpp \
-    src/package/h-formation.cpp \
-    src/package/h-momentum.cpp \
     src/package/jiange-defense.cpp \
     src/package/mountain.cpp \
     src/package/sp.cpp \
@@ -204,13 +201,10 @@ HEADERS += \
     src/util/recorder.h \
     src/util/socket.h \
     src/core/record-analysis.h \
-    src/package/hegemony.h \
     src/scenario/fancheng-scenario.h \
     src/package/bgm.h \
     src/package/boss.h \
     src/package/fire.h \
-    src/package/h-formation.h \
-    src/package/h-momentum.h \
     src/package/jiange-defense.h \
     src/package/mountain.h \
     src/package/sp.h \

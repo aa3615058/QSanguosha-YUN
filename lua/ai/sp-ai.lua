@@ -2818,3 +2818,44 @@ sgs.ai_skill_invoke.fenxin = function(self, data)
 	return (target_role == "rebel" and self.role ~= "rebel" and process:match("rebel"))
 			or (target_role == "loyalist" and self.role ~= "loyalist" and process:match("loyal"))
 end
+
+
+local function will_discard_zhendu(self)
+	local current = self.room:getCurrent()
+	local need_damage = self:getDamagedEffects(current, self.player) or self:needToLoseHp(current, self.player)
+	if self:isFriend(current) then
+		if current:getMark("drank") > 0 and not need_damage then return -1 end
+		if (getKnownCard(current, self.player, "Slash") > 0 or (getCardsNum("Slash", current, self.player) >= 1 and current:getHandcardNum() >= 2))
+			and (not self:damageIsEffective(current, nil, self.player) or current:getHp() > 2 or (getCardsNum("Peach", current, self.player) > 1 and not self:isWeak(current))) then
+			local slash = sgs.Sanguosha:cloneCard("slash")
+			local trend = 3
+			if current:hasWeapon("Axe") then trend = trend - 1
+			elseif current:hasSkills("liegong|tieqi|wushuang|niaoxiang") then trend = trend - 0.4 end
+			for _, enemy in ipairs(self.enemies) do
+				if ((enemy:getHp() < 3 and enemy:getHandcardNum() < 3) or (enemy:getHandcardNum() < 2)) and current:canSlash(enemy) and not self:slashProhibit(slash, enemy, current)
+					and self:slashIsEffective(slash, enemy, current) and sgs.isGoodTarget(enemy, self.enemies, self, true) then
+					return trend
+				end
+			end
+		end
+		if need_damage then return 3 end
+	elseif self:isEnemy(current) then
+		if current:getHp() == 1 then return 1 end
+		if need_damage or current:getHandcardNum() >= 2 then return -1 end
+		if getKnownCard(current, self.player, "Slash") == 0 and getCardsNum("Slash", current, self.player) < 0.5 then return 3.5 end
+	end
+	return -1
+end
+
+sgs.ai_skill_cardask["@zhendu-discard"] = function(self, data)
+	local discard_trend = will_discard_zhendu(self)
+	if discard_trend <= 0 then return "." end
+	if self.player:getHandcardNum() + math.random(1, 100) / 100 >= discard_trend then
+		local cards = sgs.QList2Table(self.player:getHandcards())
+		self:sortByKeepValue(cards)
+		for _, card in ipairs(cards) do
+			if not self:isValuableCard(card, self.player) then return "$" .. card:getEffectiveId() end
+		end
+	end
+	return "."
+end
