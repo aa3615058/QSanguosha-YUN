@@ -647,7 +647,7 @@ BossModePackage::BossModePackage()
 
     General *mei = new General(this, "boss_mei", "god", 5, true, true);
     mei->addSkill("bossguimei");
-    mei->addSkill("nosenyuan");
+    //mei->addSkill("nosenyuan");
     mei->addSkill(new BossBeiming);
 
     General *wang = new General(this, "boss_wang", "god", 5, true, true);
@@ -662,7 +662,7 @@ BossModePackage::BossModePackage()
 
     General *niutou = new General(this, "boss_niutou", "god", 10, true, true);
     niutou->addSkill(new BossBaolian);
-    niutou->addSkill("mengjin");
+    //niutou->addSkill("mengjin");
     niutou->addSkill(new BossManjia);
     niutou->addSkill(new BossXiaoshou);
 
@@ -670,7 +670,7 @@ BossModePackage::BossModePackage()
     mamian->addSkill(new BossGuiji);
     mamian->addSkill("nosfankui");
     mamian->addSkill(new BossLianyu);
-    mamian->addSkill("nosjuece");
+    //mamian->addSkill("nosjuece");
 
     General *heiwuchang = new General(this, "boss_heiwuchang", "god", 15, true, true);
     heiwuchang->addSkill("bossguiji");
@@ -682,7 +682,7 @@ BossModePackage::BossModePackage()
     baiwuchang->addSkill("bossbaolian");
     baiwuchang->addSkill(new BossQiangzheng);
     baiwuchang->addSkill(new BossZuijiu);
-    baiwuchang->addSkill("nosjuece");
+    //baiwuchang->addSkill("nosjuece");
 
     General *luocha = new General(this, "boss_luocha", "god", 20, false, true);
     luocha->addSkill(new BossModao);

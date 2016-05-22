@@ -22,89 +22,6 @@ public:
     NostalStandardPackage();
 };
 
-class NostalWindPackage : public Package
-{
-    Q_OBJECT
-
-public:
-    NostalWindPackage();
-};
-
-class NostalYJCMPackage : public Package
-{
-    Q_OBJECT
-
-public:
-    NostalYJCMPackage();
-};
-
-class NostalYJCM2012Package : public Package
-{
-    Q_OBJECT
-
-public:
-    NostalYJCM2012Package();
-};
-
-class NostalYJCM2013Package : public Package
-{
-    Q_OBJECT
-
-public:
-    NostalYJCM2013Package();
-};
-
-class NosJujianCard : public SkillCard
-{
-    Q_OBJECT
-
-public:
-    Q_INVOKABLE NosJujianCard();
-
-    void onEffect(const CardEffectStruct &effect) const;
-};
-
-class NosXuanhuoCard : public SkillCard
-{
-    Q_OBJECT
-
-public:
-    Q_INVOKABLE NosXuanhuoCard();
-
-    void onEffect(const CardEffectStruct &effect) const;
-};
-
-class NosJiefanCard : public SkillCard
-{
-    Q_OBJECT
-
-public:
-    Q_INVOKABLE NosJiefanCard();
-
-    void use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const;
-};
-
-class NosRenxinCard : public SkillCard
-{
-    Q_OBJECT
-
-public:
-    Q_INVOKABLE NosRenxinCard();
-
-    void use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const;
-};
-
-class NosFenchengCard : public SkillCard
-{
-    Q_OBJECT
-
-public:
-    Q_INVOKABLE NosFenchengCard();
-
-    void use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const;
-    void onEffect(const CardEffectStruct &effect) const;
-};
-
 class NosTuxiCard : public SkillCard
 {
     Q_OBJECT
@@ -163,22 +80,6 @@ public:
 
     void use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const;
     void onEffect(const CardEffectStruct &effect) const;
-};
-
-class NosGuhuoCard : public SkillCard
-{
-    Q_OBJECT
-
-public:
-    Q_INVOKABLE NosGuhuoCard();
-    bool nosguhuo(ServerPlayer *yuji) const;
-
-    bool targetFixed() const;
-    bool targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const;
-    bool targetsFeasible(const QList<const Player *> &targets, const Player *Self) const;
-
-    const Card *validate(CardUseStruct &card_use) const;
-    const Card *validateInResponse(ServerPlayer *user) const;
 };
 
 class NosYiji : public MasochismSkill
