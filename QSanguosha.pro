@@ -110,6 +110,7 @@ SOURCES += \
     src/package/h-formation.cpp \
     src/package/h-momentum.cpp \
     src/package/jiange-defense.cpp \
+    src/package/joy.cpp \
     src/package/mountain.cpp \
     src/package/sp.cpp \
     src/package/special1v1.cpp \
@@ -212,6 +213,7 @@ HEADERS += \
     src/package/h-formation.h \
     src/package/h-momentum.h \
     src/package/jiange-defense.h \
+    src/package/joy.h \
     src/package/mountain.h \
     src/package/sp.h \
     src/package/special1v1.h \

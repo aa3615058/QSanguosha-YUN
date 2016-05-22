@@ -14,12 +14,28 @@ public:
     SPPackage();
 };
 
+class SPCardPackage : public Package
+{
+    Q_OBJECT
+
+public:
+    SPCardPackage();
+};
+
 class HegemonySPPackage : public Package
 {
     Q_OBJECT
 
 public:
     HegemonySPPackage();
+};
+
+class SPMoonSpear : public Weapon
+{
+    Q_OBJECT
+
+public:
+    Q_INVOKABLE SPMoonSpear(Card::Suit suit = Diamond, int number = 12);
 };
 
 class Yongsi : public TriggerSkill
