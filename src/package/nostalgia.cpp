@@ -12,6 +12,13 @@
 #include "clientstruct.h"
 #include "room.h"
 #include "roomthread.h"
+
+NostalgiaPackage::NostalgiaPackage()
+    : Package("nostalgia")
+{
+    type = CardPack;
+}
+
 // old yjcm's generals
 
 class NosWuyan : public TriggerSkill
@@ -2486,6 +2493,7 @@ NostalYJCM2013Package::NostalYJCM2013Package()
     addMetaObject<NosFenchengCard>();
 }
 
+ADD_PACKAGE(Nostalgia)
 ADD_PACKAGE(NostalWind)
 ADD_PACKAGE(NostalStandard)
 ADD_PACKAGE(NostalYJCM)

@@ -6,6 +6,14 @@
 #include "standard.h"
 #include "standard-skillcards.h"
 
+class NostalgiaPackage : public Package
+{
+    Q_OBJECT
+
+public:
+    NostalgiaPackage();
+};
+
 class NostalStandardPackage : public Package
 {
     Q_OBJECT
