@@ -14,14 +14,6 @@ public:
     SPPackage();
 };
 
-class HegemonySPPackage : public Package
-{
-    Q_OBJECT
-
-public:
-    HegemonySPPackage();
-};
-
 class Yongsi : public TriggerSkill
 {
 public:
@@ -208,9 +200,5 @@ public:
     bool targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const;
     void onEffect(const CardEffectStruct &effect) const;
 };
-
-
-
-
 #endif
 
