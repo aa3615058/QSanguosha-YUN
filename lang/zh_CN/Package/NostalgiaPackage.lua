@@ -1,7 +1,7 @@
 -- translation for Nostalgia Package
 
 return {
-	["nostal_standard"] = "标准版",
+	["nostal_standard"] = "怀旧-标准",
 	["nostal_wind"] = "怀旧-风",
 	["nostal_yjcm"] = "怀旧-一将",
 	["nostal_yjcm2012"] = "怀旧-一将2",
