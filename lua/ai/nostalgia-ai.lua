@@ -1,3 +1,6 @@
+sgs.weapon_range.MoonSpear = 3
+sgs.ai_use_priority.MoonSpear = 2.635
+
 nosjujian_skill = {}
 nosjujian_skill.name = "nosjujian"
 table.insert(sgs.ai_skills, nosjujian_skill)
@@ -1773,6 +1776,8 @@ sgs.nosluoyi_keep_value = {
 	fan             = 4.8,
 	KylinBow        = 4.7,
 	Halberd         = 4.6,
+	MoonSpear       = 4.5,
+	SPMoonSpear = 4.5,
 	DefensiveHorse  = 4
 }
 
