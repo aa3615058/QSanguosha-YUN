@@ -37,6 +37,8 @@ config = {
 	--	"Disaster",
 	--	"JoyEquip",
 
+		"Yun",
+		"YunEX",
 		"Standard",
 		"Wind",
 		"Fire",

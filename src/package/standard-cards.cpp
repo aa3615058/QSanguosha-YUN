@@ -140,11 +140,11 @@ void Slash::onUse(Room *room, const CardUseStruct &card_use) const
                 else
                     delete fire_slash;
             }
-            if (player->hasSkill("fulu")) {
+            if (player->hasSkill("xiaohan")) {
                 ThunderSlash *thunder_slash = new ThunderSlash(getSuit(), getNumber());
                 if (!isVirtualCard() || subcardsLength() > 0)
                     thunder_slash->addSubcard(this);
-                thunder_slash->setSkillName("fulu");
+                thunder_slash->setSkillName("xiaohan");
                 bool can_use = true;
                 foreach (ServerPlayer *p, use.to) {
                     if (!player->canSlash(p, thunder_slash, false)) {
@@ -152,7 +152,7 @@ void Slash::onUse(Room *room, const CardUseStruct &card_use) const
                         break;
                     }
                 }
-                if (can_use && room->askForSkillInvoke(player, "fulu", data))
+                if (can_use && room->askForSkillInvoke(player, "xiaohan-thunder_slash", data))
                     use.card = thunder_slash;
                 else
                     delete thunder_slash;
@@ -364,6 +364,26 @@ bool Slash::targetFilter(const QList<const Player *> &targets, const Player *to_
                 }
             }
             if (!canSelect) return false;
+        }
+    }
+
+    if (Self->hasSkill("zhangui") && Self->getPhase() == Player::Play) {
+        if(!(Self->hasFlag("slashUsed"))) {
+            slash_targets += 2;
+        }
+        int aliveCount = Self->aliveCount();
+
+        distance_limit = false;
+        QList<int> seats;
+        foreach(const Player *p, targets) {
+            seats << p->getSeat();
+        }
+        int seat = to_select->getSeat();
+        if(seats.length() > 0) {
+            if(!(seats.contains(seat + 1)) && !(seats.contains(seat - 1)) && !(seats.contains(seat + aliveCount - 1)) && !(seats.contains(seat - aliveCount + 1))) return false;
+        } else {
+            int seatDistance = (Self->getSeat() - seat + aliveCount) % aliveCount;
+            if(seatDistance != 1 && seatDistance != aliveCount - 1) return false;
         }
     }
 
@@ -1280,7 +1300,14 @@ Lightning::Lightning(Suit suit, int number) :Disaster(suit, number)
 
 void Lightning::takeEffect(ServerPlayer *target) const
 {
-    target->getRoom()->damage(DamageStruct(this, NULL, target, 3, DamageStruct::Thunder));
+    DamageStruct damage(this, NULL, target, 3, DamageStruct::Thunder);
+    Room *room = target->getRoom();
+    if(ServerPlayer * player = room->findPlayerBySkillName("xiaohan")) {
+        damage.from = player;
+        room->broadcastSkillInvoke("xiaohan");
+        room->sendCompulsoryTriggerLog(player, "xiaohan");
+    }
+    target->getRoom()->damage(damage);
 }
 
 // EX cards

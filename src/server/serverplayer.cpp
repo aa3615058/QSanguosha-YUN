@@ -1319,3 +1319,28 @@ bool ServerPlayer::CompareByActionOrder(ServerPlayer *a, ServerPlayer *b)
     return room->getFront(a, b) == a;
 }
 
+void ServerPlayer::pileToPile(const QString &from, const QString &to, bool open) {
+    QList<ServerPlayer *> open_players;
+    if (!open) {
+        open_players << this;
+    } else {
+        open_players = room->getAllPlayers();
+    }
+    foreach(ServerPlayer *p, open_players)
+        setPileOpen(to, p->objectName());
+
+
+    QList<int> card_ids = piles[from];
+    foreach(int id, card_ids) {
+        obtainCard(Sanguosha->getCard(id));
+    }
+    piles[to].append(card_ids);
+    piles[from].clear();
+
+    CardsMoveStruct move;
+    move.card_ids = card_ids;
+    move.to = this;
+    move.to_place = Player::PlaceSpecial;
+    move.reason = CardMoveReason();
+    room->moveCardsAtomic(move, open);
+}

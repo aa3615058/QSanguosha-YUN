@@ -118,7 +118,8 @@ SOURCES += \
     src/package/jsp.cpp \
     src/dialog/mainwindowserverlist.cpp \
     src/dialog/dialogslsettings.cpp \
-    src/server/qtupnpportmapping.cpp
+    src/server/qtupnpportmapping.cpp \
+    src/package/yun.cpp
 
 HEADERS += \
     src/client/aux-skills.h \
@@ -225,7 +226,8 @@ HEADERS += \
     src/dialog/mainwindowserverlist.h \
     src/dialog/dialogslsettings.h \
     src/core/defines.h \
-    src/server/qtupnpportmapping.h
+    src/server/qtupnpportmapping.h \
+    src/package/yun.h
 
 FORMS += \
     src/dialog/cardoverview.ui \
