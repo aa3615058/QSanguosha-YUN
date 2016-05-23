@@ -64,7 +64,7 @@ config = {
 --		"Hegemony",
 --		"HFormation",
 --		"HMomentum",
-		"HegemonySP",
+--		"HegemonySP",
 		"JSP",
 		"NostalStandard",
 --		"NostalWind",
