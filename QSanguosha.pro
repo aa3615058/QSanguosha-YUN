@@ -106,7 +106,6 @@ SOURCES += \
     src/package/bgm.cpp \
     src/package/boss.cpp \
     src/package/fire.cpp \
-    src/package/jiange-defense.cpp \
     src/package/mountain.cpp \
     src/package/sp.cpp \
     src/package/yjcm.cpp \
@@ -203,7 +202,6 @@ HEADERS += \
     src/package/bgm.h \
     src/package/boss.h \
     src/package/fire.h \
-    src/package/jiange-defense.h \
     src/package/mountain.h \
     src/package/sp.h \
     src/package/yjcm.h \
