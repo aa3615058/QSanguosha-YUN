@@ -72,7 +72,7 @@ config = {
 --		"NostalYJCM2012",
 --		"NostalYJCM2013",
 --		"JianGeDefense",
-		"BossMode",
+--		"BossMode",
 --		"Yitian",
 --		"Wisdom",
 		"Test"
