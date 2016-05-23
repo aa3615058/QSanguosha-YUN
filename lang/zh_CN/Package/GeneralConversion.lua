@@ -30,8 +30,4 @@ return {
 	["&sp_jiaxu"] = "贾诩",
 	["illustrator:sp_jiaxu"] = "雪君S",
 	["$LuanwuAnimateSP"] = "image=image/animate/luanwuSP.png",
-
-	["sp_zhugejin"] = "SP诸葛瑾",
-	["&sp_zhugejin"] = "诸葛瑾",
-	["illustrator:sp_zhugejin"] = "G.G.G."
 }

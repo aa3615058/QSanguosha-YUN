@@ -109,8 +109,6 @@ SOURCES += \
     src/package/jiange-defense.cpp \
     src/package/mountain.cpp \
     src/package/sp.cpp \
-    src/package/special1v1.cpp \
-    src/package/special3v3.cpp \
     src/package/yjcm.cpp \
     src/package/yjcm2012.cpp \
     src/package/yjcm2013.cpp \
@@ -208,8 +206,6 @@ HEADERS += \
     src/package/jiange-defense.h \
     src/package/mountain.h \
     src/package/sp.h \
-    src/package/special1v1.h \
-    src/package/special3v3.h \
     src/package/yjcm.h \
     src/package/yjcm2012.h \
     src/package/yjcm2013.h \
