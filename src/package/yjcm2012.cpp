@@ -481,19 +481,45 @@ class Zishou : public DrawCardsSkill
 public:
     Zishou() : DrawCardsSkill("zishou")
     {
+
     }
 
-    int getDrawNum(ServerPlayer *liubiao, int n) const
+    int getDrawNum(ServerPlayer *player, int n) const
     {
-        Room *room = liubiao->getRoom();
-        if (liubiao->isWounded() && room->askForSkillInvoke(liubiao, objectName())) {
-            int losthp = liubiao->getLostHp();
-            room->broadcastSkillInvoke(objectName(), qMin(3, losthp));
-            liubiao->clearHistory();
-            liubiao->skip(Player::Play);
-            return n + losthp;
-        } else
-            return n;
+        if (player->askForSkillInvoke(this)) {
+            Room *room = player->getRoom();
+            room->broadcastSkillInvoke(objectName());
+
+            room->setPlayerFlag(player, "zishou");
+
+            QSet<QString> kingdomSet;
+            foreach(ServerPlayer *p, room->getAlivePlayers())
+                kingdomSet.insert(p->getKingdom());
+
+            return n + kingdomSet.count();
+        }
+
+        return n;
+    }
+};
+
+class ZishouProhibit : public ProhibitSkill
+{
+public:
+    ZishouProhibit() : ProhibitSkill("#zishou")
+    {
+
+    }
+
+    bool isProhibited(const Player *from, const Player *to, const Card *card, const QList<const Player *> & /* = QList<const Player *>() */) const
+    {
+        if (card->isKindOf("SkillCard"))
+            return false;
+
+        if (from->hasFlag("zishou"))
+            return from != to;
+
+        return false;
     }
 };
 
@@ -1076,6 +1102,7 @@ YJCM2012Package::YJCM2012Package()
 
     General *liubiao = new General(this, "liubiao", "qun", 4); // YJ 108
     liubiao->addSkill(new Zishou);
+    liubiao->addSkill(new ZishouProhibit);
     liubiao->addSkill(new Zongshi);
 
     General *madai = new General(this, "madai", "shu"); // YJ 109

@@ -653,7 +653,7 @@ BossModePackage::BossModePackage()
     General *wang = new General(this, "boss_wang", "god", 5, true, true);
     wang->addSkill("bossguimei");
     wang->addSkill(new BossLuolei);
-    wang->addSkill("huilei");
+    //wang->addSkill("huilei");
 
     General *liang = new General(this, "boss_liang", "god", 5, true, true);
     liang->addSkill("bossguimei");
@@ -687,7 +687,7 @@ BossModePackage::BossModePackage()
     General *luocha = new General(this, "boss_luocha", "god", 20, false, true);
     luocha->addSkill(new BossModao);
     luocha->addSkill(new BossQushou);
-    luocha->addSkill("yizhong");
+    //luocha->addSkill("yizhong");
     luocha->addSkill("kuanggu");
 
     General *yecha = new General(this, "boss_yecha", "god", 18, true, true);

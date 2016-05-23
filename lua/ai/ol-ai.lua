@@ -286,9 +286,7 @@ end
     描述：当你使用或打出【闪】时，你可以令一名其他角色进行判定，若结果为：♠，你对该角色造成2点雷电伤害；♣，你回复1点体力，然后对该角色造成1点雷电伤害。
 ]]--
 --room->askForPlayerChosen(player, others, "olleiji", "@olleiji", true, true)
-sgs.ai_skill_playerchosen["olleiji"] = function(self, targets)
-    --
-end
+
 --[[
     技能：鬼道
     描述：每当一名角色的判定牌生效前，你可以打出一张黑色牌替换之。

@@ -67,42 +67,59 @@ public:
 class Leiji : public TriggerSkill
 {
 public:
-    Leiji() : TriggerSkill("leiji")
-    {
-        events << CardResponded << DamageCaused;
+    Leiji() : TriggerSkill("leiji") {
+        events << CardUsed << CardResponded;
     }
 
-    bool triggerable(const ServerPlayer *target) const
+    bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const
     {
-        return target != NULL;
-    }
+        const Card *jink = NULL;
+        if (triggerEvent == CardUsed)
+            jink = data.value<CardUseStruct>().card;
+        else
+            jink = data.value<CardResponseStruct>().m_card;
 
-    bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *zhangjiao, QVariant &data) const
-    {
-        if (triggerEvent == CardResponded && TriggerSkill::triggerable(zhangjiao)) {
-            const Card *card_star = data.value<CardResponseStruct>().m_card;
-            if (card_star->isKindOf("Jink")) {
-                ServerPlayer *target = room->askForPlayerChosen(zhangjiao, room->getAlivePlayers(), objectName(), "leiji-invoke", true, true);
-                if (target) {
-                    room->broadcastSkillInvoke(objectName());
+        if (jink && jink->isKindOf("Jink")) {
+            QList<ServerPlayer *> others = room->getOtherPlayers(player);
+            ServerPlayer *victim = room->askForPlayerChosen(player, others, "leiji", "@leiji", true, true);
+            if (!victim)
+                return false;
 
-                    JudgeStruct judge;
-                    judge.pattern = ".|black";
-                    judge.good = false;
-                    judge.negative = true;
-                    judge.reason = objectName();
-                    judge.who = target;
+            room->broadcastSkillInvoke("leiji");
+            JudgeStruct judge;
+            judge.who = victim;
+            judge.pattern = ".|black";
+            judge.good = false;
+            judge.reason = "leiji";
+            room->judge(judge);
 
-                    room->judge(judge);
-
-                    if (judge.isBad())
-                        room->damage(DamageStruct(objectName(), zhangjiao, target, 1, DamageStruct::Thunder));
+            if (judge.isBad()) {
+                Card::Suit suit = judge.card->getSuit();
+                if (suit == Card::Spade) {
+                    DamageStruct damage;
+                    damage.from = player;
+                    damage.to = victim;
+                    damage.reason = "leiji";
+                    damage.damage = 2;
+                    damage.nature = DamageStruct::Thunder;
+                    room->damage(damage);
+                }
+                else if (suit == Card::Club) {
+                    if (player->getLostHp() > 0) {
+                        RecoverStruct recover;
+                        recover.who = player;
+                        recover.recover = 1;
+                        room->recover(player, recover);
+                    }
+                    DamageStruct damage;
+                    damage.from = player;
+                    damage.to = victim;
+                    damage.reason = "leiji";
+                    damage.damage = 1;
+                    damage.nature = DamageStruct::Thunder;
+                    room->damage(damage);
                 }
             }
-        } else if (triggerEvent == DamageCaused && zhangjiao->isAlive() && zhangjiao->isWounded()) {
-            DamageStruct damage = data.value<DamageStruct>();
-            if (damage.reason == objectName() && !damage.chain)
-                room->recover(zhangjiao, RecoverStruct(zhangjiao));
         }
         return false;
     }
