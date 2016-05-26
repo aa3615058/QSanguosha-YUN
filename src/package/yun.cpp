@@ -434,6 +434,21 @@ public:
     }
 };
 
+class Diaolue : public OneCardViewAsSkill {
+public:
+    Diaolue() : OneCardViewAsSkill("diaolue") {
+        filter_pattern = ".|red";
+        response_or_use = true;
+    }
+
+    const Card *viewAs(const Card *originalCard) const {
+        LureTiger *lureTiger = new LureTiger(originalCard->getSuit(), originalCard->getNumber());
+        lureTiger->addSubcard(originalCard->getId());
+        lureTiger->setSkillName(objectName());
+        return lureTiger;
+    }
+};
+
 class Xiaohan : public TriggerSkill {
 public:
     Xiaohan() : TriggerSkill("xiaohan") {
@@ -663,7 +678,7 @@ YunPackage::YunPackage()
 
     General *yangwenqi = new General(this, "yangwenqi", "shu", 4, false); // Yun 009
     yangwenqi->addSkill(new Zhangui);
-    //yangwenqi->addSkill(new Diaolue);
+    yangwenqi->addSkill(new Diaolue);
 
     General *xiaosa = new General(this, "xiaosa", "wei", 4, false); // Yun 010
     xiaosa->addSkill(new Xiaohan);
