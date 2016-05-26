@@ -33,9 +33,11 @@ class Player : public QObject
     Q_PROPERTY(bool alive READ isAlive WRITE setAlive)
     Q_PROPERTY(QString flags READ getFlags WRITE setFlags)
     Q_PROPERTY(bool chained READ isChained WRITE setChained)
+    Q_PROPERTY(bool removed READ isRemoved WRITE setRemoved)
     Q_PROPERTY(bool owner READ isOwner WRITE setOwner)
     Q_PROPERTY(bool role_shown READ hasShownRole WRITE setShownRole)
     Q_PROPERTY(General::Gender gender READ getGender WRITE setGender)
+    Q_PROPERTY(QString next READ getNextName WRITE setNext)
 
     Q_ENUMS(Phase)
     Q_ENUMS(Place)
@@ -125,11 +127,12 @@ public:
     bool faceUp() const;
     void setFaceUp(bool face_up);
 
-    virtual int aliveCount() const = 0;
+    virtual int aliveCount(bool includeRemoved = true) const = 0;
     void setFixedDistance(const Player *player, int distance);
     void removeFixedDistance(const Player *player, int distance);
     void insertAttackRangePair(const Player *player);
     void removeAttackRangePair(const Player *player);
+    int originalRightDistanceTo(const Player *other) const;
     int distanceTo(const Player *other, int distance_fix = 0) const;
     const General *getAvatarGeneral() const;
     const General *getGeneral() const;
@@ -193,7 +196,17 @@ public:
     QStringList getMarkNames() const;
 
     void setChained(bool chained);
+    void setRemoved(bool removed);
     bool isChained() const;
+    bool isRemoved() const;
+
+    void setNext(Player *next);
+    void setNext(const QString &next);
+    Player *getNext(bool ignoreRemoved = true) const;
+    QString getNextName() const;
+    Player *getLast(bool ignoreRemoved = true) const;
+    Player *getNextAlive(int n = 1, bool ignoreRemoved = true) const;
+    Player *getLastAlive(int n = 1, bool ignoreRemoved = true) const;
 
     bool canSlash(const Player *other, const Card *slash, bool distance_limit = true, int rangefix = 0, const QList<const Player *> &others = QList<const Player *>()) const;
     bool canSlash(const Player *other, bool distance_limit = true, int rangefix = 0, const QList<const Player *> &others = QList<const Player *>()) const;
@@ -278,6 +291,9 @@ private:
     WrappedCard *weapon, *armor, *defensive_horse, *offensive_horse, *treasure;
     bool face_up;
     bool chained;
+    bool removed;
+    QString next;
+
     QList<int> judging_area;
     QMultiHash<const Player *, int> fixed_distance;
     QList<const Player *> attack_range_pair;
@@ -293,6 +309,7 @@ signals:
     void kingdom_changed();
     void phase_changed();
     void owner_changed(bool owner);
+    void removedChanged();
 };
 
 #endif

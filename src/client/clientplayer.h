@@ -23,7 +23,7 @@ public:
     QString getGameMode() const;
 
     void setFlags(const QString &flag);
-    int aliveCount() const;
+    int aliveCount(bool includeRemoved = true) const;
     int getHandcardNum() const;
     void removeCard(const Card *card, Place place);
     void addCard(const Card *card, Place place);

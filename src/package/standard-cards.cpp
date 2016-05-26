@@ -152,8 +152,10 @@ void Slash::onUse(Room *room, const CardUseStruct &card_use) const
                         break;
                     }
                 }
-                if (can_use && room->askForSkillInvoke(player, "xiaohan-thunder_slash", data))
+                if (can_use && room->askForSkillInvoke(player, "xiaohan-thunder_slash", data)) {
                     use.card = thunder_slash;
+                    room->notifySkillInvoked(player, "xiaohan-thunder_slash");
+                }
                 else
                     delete thunder_slash;
             }
@@ -1305,7 +1307,12 @@ void Lightning::takeEffect(ServerPlayer *target) const
     if(ServerPlayer * player = room->findPlayerBySkillName("xiaohan")) {
         damage.from = player;
         room->broadcastSkillInvoke("xiaohan");
-        room->sendCompulsoryTriggerLog(player, "xiaohan");
+        room->notifySkillInvoked(player, "xiaohan");
+        LogMessage log;
+        log.type = "#xiaohan-transfer";
+        log.from = player;
+        log.arg = "xiaohan";
+        room->sendLog(log);
     }
     target->getRoom()->damage(damage);
 }

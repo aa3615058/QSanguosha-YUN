@@ -23,6 +23,7 @@ config = {
 	},
 
 	package_names = {
+		"YunCard",
 		"StandardCard",
 		"StandardExCard",
 		"Maneuvering",

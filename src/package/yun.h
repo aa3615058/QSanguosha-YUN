@@ -6,6 +6,28 @@
 #include "skill.h"
 #include "standard.h"
 
+class YunCardPackage : public Package
+{
+    Q_OBJECT
+
+public:
+    YunCardPackage();
+};
+
+class LureTiger : public TrickCard
+{
+    Q_OBJECT
+
+public:
+    Q_INVOKABLE LureTiger(Card::Suit suit, int number);
+
+    virtual QString getSubtype() const;
+
+    virtual bool targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const;
+    virtual void use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const;
+    virtual void onEffect(const CardEffectStruct &effect) const;
+};
+
 class YunPackage : public Package
 {
     Q_OBJECT

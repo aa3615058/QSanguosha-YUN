@@ -24,7 +24,7 @@ ServerPlayer::ServerPlayer(Room *room)
     : Player(room), m_isClientResponseReady(false), m_isWaitingReply(false),
     socket(NULL), room(room),
     ai(NULL), trust_ai(new TrustAI(this)), recorder(NULL),
-    _m_phases_index(0), next(NULL)
+    _m_phases_index(0)//, next(NULL)
 {
     semas = new QSemaphore *[S_NUM_SEMAPHORES];
     for (int i = 0; i < S_NUM_SEMAPHORES; i++)
@@ -226,9 +226,16 @@ QList<int> ServerPlayer::forceToDiscard(int discard_num, bool include_equip, boo
     return to_discard;
 }
 
-int ServerPlayer::aliveCount() const
+int ServerPlayer::aliveCount(bool includeRemoved) const
 {
-    return room->alivePlayerCount();
+    int n = room->alivePlayerCount();
+    if (!includeRemoved) {
+        foreach (ServerPlayer *p, room->getAllPlayers()) {
+            if (p->isRemoved())
+                n--;
+        }
+    }
+    return n;
 }
 
 int ServerPlayer::getHandcardNum() const
@@ -936,26 +943,29 @@ QList<ServerPlayer *> ServerPlayer::getVictims() const
     return victims;
 }
 
-void ServerPlayer::setNext(ServerPlayer *next)
+/*void ServerPlayer::setNext(ServerPlayer *next)
 {
     this->next = next;
 }
 
-ServerPlayer *ServerPlayer::getNext() const
+ServerPlayer *ServerPlayer::getNext(bool ignoreRemoved) const
 {
+    if (ignoreRemoved && next->isRemoved())
+        return next->getNext(ignoreRemoved);
     return next;
 }
 
-ServerPlayer *ServerPlayer::getNextAlive(int n) const
+ServerPlayer *ServerPlayer::getNextAlive(int n, bool ignoreRemoved) const
 {
-    bool hasAlive = (room->getAlivePlayers().length() > 0);
+    bool hasAlive = (aliveCount(!ignoreRemoved) > 0);
     ServerPlayer *next = const_cast<ServerPlayer *>(this);
     if (!hasAlive) return next;
-    for (int i = 0; i < n; i++) {
-        do next = next->next; while (next->isDead());
+    for (int i = 0; i < n; ++i) {
+        do next = next->getNext(ignoreRemoved);
+        while (next->isDead());
     }
     return next;
-}
+}*/
 
 int ServerPlayer::getGeneralMaxHp() const
 {

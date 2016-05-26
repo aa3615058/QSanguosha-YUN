@@ -204,6 +204,16 @@ public:
 
     void setChained(bool chained);
     bool isChained() const;
+    void setRemoved(bool removed);
+    bool isRemoved() const;
+
+    void setNext(Player *next);
+    void setNext(const QString &next);
+    Player *getNext(bool ignoreRemoved = true) const;
+    QString getNextName() const;
+    Player *getLast(bool ignoreRemoved = true) const;
+    Player *getNextAlive(int n = 1, bool ignoreRemoved = true) const;
+    Player *getLastAlive(int n = 1, bool ignoreRemoved = true) const;
 
     bool canSlash(const Player *other, const Card *slash, bool distance_limit = true,
                   int rangefix = 0, const QList<const Player *> &others = QList<const Player *>()) const;
@@ -331,10 +341,6 @@ public:
 
     void startRecord();
     void saveRecord(const char *filename);
-
-    void setNext(ServerPlayer *next);
-    ServerPlayer *getNext() const;
-    ServerPlayer *getNextAlive(int n = 1) const;
 
     // 3v3 methods
     void addToSelected(const char *general);
@@ -1247,9 +1253,6 @@ public:
 };
 
 %extend Room {
-    ServerPlayer *nextPlayer() const{
-        return $self->getCurrent()->getNextAlive();
-    }
     void output(const char *msg) {
         if(Config.value("DebugOutput", false).toBool())
             $self->output(msg);

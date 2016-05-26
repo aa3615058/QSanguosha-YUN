@@ -2673,31 +2673,6 @@ public:
     }
 };
 
-class Xiaoxi : public TriggerSkill
-{
-public:
-    Xiaoxi() : TriggerSkill("xiaoxi")
-    {
-        events << Debut;
-    }
-
-    bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &) const
-    {
-        ServerPlayer *opponent = player->getNext();
-        if (!opponent->isAlive())
-            return false;
-        Slash *slash = new Slash(Card::NoSuit, 0);
-        slash->setSkillName("_xiaoxi");
-        if (player->isLocked(slash) || !player->canSlash(opponent, slash, false)) {
-            delete slash;
-            return false;
-        }
-        if (room->askForSkillInvoke(player, objectName()))
-            room->useCard(CardUseStruct(slash, player, opponent));
-        return false;
-    }
-};
-
 void StandardPackage::addGenerals()
 {
     // Wei
@@ -2858,7 +2833,7 @@ void StandardPackage::addGenerals()
     addMetaObject<JianyanCard>();
     addMetaObject<GuoseCard>();
 
-    skills << new Xiaoxi << new NonCompulsoryInvalidity << new Jianyan;
+    skills << new NonCompulsoryInvalidity << new Jianyan;
 }
 
 

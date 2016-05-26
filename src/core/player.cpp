@@ -13,7 +13,7 @@ Player::Player(QObject *parent)
     m_gender(General::Sexless), hp(-1), max_hp(-1), state("online"), seat(0), alive(true),
     phase(NotActive),
     weapon(NULL), armor(NULL), defensive_horse(NULL), offensive_horse(NULL), treasure(NULL),
-    face_up(true), chained(false),
+    face_up(true), chained(false), removed(false),
     role_shown(false), pile_open(QMap<QString, QStringList>())
 {
 }
@@ -222,7 +222,8 @@ int Player::getAttackRange(bool include_weapon) const
 bool Player::inMyAttackRange(const Player *other, int distance_fix) const
 {
     // for zhaofu
-
+    if (distanceTo(other) == -1)
+        return false;
     foreach (const Player *p, getAliveSiblings()) {
         if (p->hasLordSkill("zhaofu") && p->distanceTo(other) == 1 && getKingdom() == "wu")
             return true;
@@ -256,6 +257,67 @@ void Player::removeAttackRangePair(const Player *player)
     attack_range_pair.removeOne(player);
 }
 
+void Player::setNext(Player *next)
+{
+    this->next = next->objectName();
+}
+
+void Player::setNext(const QString &next)
+{
+    this->next = next;
+}
+
+Player *Player::getNext(bool ignoreRemoved) const
+{
+    Player *next_p = parent()->findChild<Player *>(next);
+    if (ignoreRemoved && next_p->isRemoved())
+        return next_p->getNext(ignoreRemoved);
+    return next_p;
+}
+
+QString Player::getNextName() const
+{
+    return next;
+}
+
+Player *Player::getLast(bool ignoreRemoved) const
+{
+    foreach (Player *p, parent()->findChildren<Player *>()) {
+        if (p->getNext(ignoreRemoved) == this)
+            return p;
+    }
+    return NULL;
+}
+
+Player *Player::getNextAlive(int n, bool ignoreRemoved) const
+{
+    bool hasAlive = (aliveCount(!ignoreRemoved) > 0);
+    Player *next = parent()->findChild<Player *>(objectName());
+    if (!hasAlive) return next;
+    for (int i = 0; i < n; ++i) {
+        do next = next->getNext(ignoreRemoved);
+        while (next->isDead());
+    }
+    return next;
+}
+
+Player *Player::getLastAlive(int n, bool ignoreRemoved) const
+{
+    return getNextAlive(aliveCount(!ignoreRemoved) - n, ignoreRemoved);
+}
+
+int Player::originalRightDistanceTo(const Player *other) const
+{
+    //return qAbs(seat - other->seat);
+    int right = 0;
+    Player *next_p = parent()->findChild<Player *>(objectName());
+    while (next_p != other && right < 100) {
+        next_p = next_p->getNextAlive();
+        right++;
+    }
+    return right;
+}
+
 int Player::distanceTo(const Player *other, int distance_fix) const
 {
     if (other == NULL)
@@ -263,6 +325,9 @@ int Player::distanceTo(const Player *other, int distance_fix) const
 
     if (this == other)
         return 0;
+
+    if (isRemoved() || other->isRemoved())
+        return -1;
 
     if (hasSkill("zhuiji") && other->getHp() < getHp())
         return 1;
@@ -278,8 +343,8 @@ int Player::distanceTo(const Player *other, int distance_fix) const
         return min;
     }
 
-    int right = qAbs(seat - other->seat);
-    int left = aliveCount() - right;
+    int right = originalRightDistanceTo(other);
+    int left = aliveCount(false) - right;
     int distance = qMin(left, right);
 
     distance += Sanguosha->correctDistance(this, other);
@@ -859,11 +924,24 @@ bool Player::isChained() const
     return chained;
 }
 
+bool Player::isRemoved() const
+{
+    return removed;
+}
+
 void Player::setChained(bool chained)
 {
     if (this->chained != chained) {
         this->chained = chained;
         emit state_changed();
+    }
+}
+
+void Player::setRemoved(bool removed)
+{
+    if (this->removed != removed) {
+        this->removed = removed;
+        emit removedChanged();
     }
 }
 

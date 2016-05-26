@@ -3752,9 +3752,12 @@ void Room::startGame()
 {
     m_alivePlayers = m_players;
     if (mode != "08_defense") {
-        for (int i = 0; i < player_count - 1; i++)
+        for (int i = 0; i < player_count - 1; i++) {
             m_players.at(i)->setNext(m_players.at(i + 1));
+            broadcastProperty(m_players.at(i), "next");
+        }
         m_players.last()->setNext(m_players.first());
+        broadcastProperty(m_players.last(), "next");
     } else {
         QList<int> next_list;
         next_list << 0 << 7 << 1 << 6 << 2 << 5 << 3 << 4;
