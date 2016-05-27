@@ -456,23 +456,27 @@ public:
 class Diaolue : public TriggerSkill {
 public:
     Diaolue() : TriggerSkill("diaolue") {
-        events << CardUsed << EventPhaseChanging;
+        events << CardUsed << EventPhaseChanging << TrickEffect;
         view_as_skill = new DiaolueVS;
     }
+    bool triggerable(const ServerPlayer *target) const {
+        return target != NULL;
+    }
+
     bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const {
-        if(event == CardUsed) {
-            CardUseStruct use = data.value<CardUseStruct>();
-            const Card* card = use.card;
-            if(card->objectName() == "lure_tiger") {
-                if(card->getSkillName() == objectName()) {
-                    room->setPlayerFlag(player, "diaolueUsed");
-                }
-                QList<ServerPlayer *> targets = use.to;
-                foreach(ServerPlayer *target, targets) {
-                    target->gainMark("@diaohulishan");
-                }
+        if(event == CardUsed && player->hasSkill(objectName())) {
+            const Card* card = data.value<CardUseStruct>().card;
+            if(card->objectName() == "lure_tiger" && card->getSkillName() == objectName()){
+                room->setPlayerFlag(player, "diaolueUsed");
             }
-        }else if(event == EventPhaseChanging) {
+        }else if(event == TrickEffect) {
+            CardEffectStruct effect = data.value<CardEffectStruct>();
+            const Card* card = effect.card;
+            if(card->objectName() == "lure_tiger" && effect.from->hasSkill(objectName())) {
+                player->gainMark("@diaohulishan");
+            }
+        }
+        else if(event == EventPhaseChanging && player->hasSkill(objectName())) {
             if(data.value<PhaseChangeStruct>().to == Player::NotActive) {
                 foreach(ServerPlayer* p, room->getOtherPlayers(player)) {
                     p->loseMark("@diaohulishan");
