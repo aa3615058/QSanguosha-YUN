@@ -437,7 +437,7 @@ public:
 class DiaolueVS : public OneCardViewAsSkill {
 public:
     DiaolueVS() : OneCardViewAsSkill("diaolue") {
-        filter_pattern = ".|red";
+        filter_pattern = ".|red|.|hand";
         response_or_use = true;
     }
 
