@@ -434,11 +434,15 @@ public:
     }
 };
 
-class Diaolue : public OneCardViewAsSkill {
+class DiaolueVS : public OneCardViewAsSkill {
 public:
-    Diaolue() : OneCardViewAsSkill("diaolue") {
+    DiaolueVS() : OneCardViewAsSkill("diaolue") {
         filter_pattern = ".|red";
         response_or_use = true;
+    }
+
+    bool isEnabledAtPlay(const Player *player) const {
+        return !player->hasFlag("diaolueUsed");
     }
 
     const Card *viewAs(const Card *originalCard) const {
@@ -446,6 +450,39 @@ public:
         lureTiger->addSubcard(originalCard->getId());
         lureTiger->setSkillName(objectName());
         return lureTiger;
+    }
+};
+
+class Diaolue : public TriggerSkill {
+public:
+    Diaolue() : TriggerSkill("diaolue") {
+        events << CardUsed << EventPhaseChanging;
+        view_as_skill = new DiaolueVS;
+    }
+    bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const {
+        if(event == CardUsed) {
+            CardUseStruct use = data.value<CardUseStruct>();
+            const Card* card = use.card;
+            if(card->objectName() == "lure_tiger") {
+                if(card->getSkillName() == objectName()) {
+                    room->setPlayerFlag(player, "diaolueUsed");
+                }
+                QList<ServerPlayer *> targets = use.to;
+                foreach(ServerPlayer *target, targets) {
+                    target->gainMark("@diaohulishan");
+                }
+            }
+        }else if(event == EventPhaseChanging) {
+            if(data.value<PhaseChangeStruct>().to == Player::NotActive) {
+                foreach(ServerPlayer* p, room->getOtherPlayers(player)) {
+                    p->loseMark("@diaohulishan");
+                }
+            }
+            if(data.value<PhaseChangeStruct>().to == Player::Play) {
+                room->setPlayerFlag(player, "-diaolueUsed");
+            }
+        }
+        return false;
     }
 };
 
