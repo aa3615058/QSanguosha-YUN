@@ -21,7 +21,6 @@
 #include "guandu-scenario.h"
 #include "couple-scenario.h"
 #include "boss-mode-scenario.h"
-#include "zombie-scenario.h"
 #include "fancheng-scenario.h"
 
 Engine *Sanguosha = NULL;
@@ -52,7 +51,6 @@ void Engine::_loadModScenarios()
     addScenario(new GuanduScenario());
     addScenario(new CoupleScenario());
     addScenario(new FanchengScenario());
-    addScenario(new ZombieScenario());
     addScenario(new ImpasseScenario());
 }
 
@@ -1173,8 +1171,6 @@ QStringList Engine::getRandomLords() const
     if (Config.EnableBasara)
         banlist_ban = Config.value("Banlist/Basara").toStringList();
 
-    if (Config.GameMode == "zombie_mode")
-        banlist_ban.append(Config.value("Banlist/Zombie").toStringList());
     else if (isNormalGameMode(Config.GameMode))
         banlist_ban.append(Config.value("Banlist/Roles").toStringList());
 
