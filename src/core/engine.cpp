@@ -19,8 +19,6 @@
 #include "miniscenarios.h"
 
 #include "guandu-scenario.h"
-#include "couple-scenario.h"
-#include "boss-mode-scenario.h"
 #include "fancheng-scenario.h"
 
 Engine *Sanguosha = NULL;
@@ -49,9 +47,7 @@ void Engine::_loadMiniScenarios()
 void Engine::_loadModScenarios()
 {
     addScenario(new GuanduScenario());
-    addScenario(new CoupleScenario());
     addScenario(new FanchengScenario());
-    addScenario(new ImpasseScenario());
 }
 
 void Engine::addPackage(const QString &name)
@@ -330,7 +326,6 @@ Engine::Engine(bool isManualMode)
     modes["08p"] = tr("8 players");
     modes["08pd"] = tr("8 players (2 renegades)");
     modes["08pz"] = tr("8 players (0 renegade)");
-    modes["08_defense"] = tr("8 players (JianGe Defense)");
     modes["09p"] = tr("9 players");
     modes["10pd"] = tr("10 players");
     modes["10p"] = tr("10 players (1 renegade)");
