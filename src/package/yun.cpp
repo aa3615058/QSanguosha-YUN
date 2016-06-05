@@ -568,6 +568,7 @@ class YingzhouViewAsSkill : public OneCardViewAsSkill {
 public:
     YingzhouViewAsSkill() : OneCardViewAsSkill("yingzhou") {
         filter_pattern = ".|.|.|hand";
+        response_or_use = true;
     }
     bool isEnabledAtPlay(const Player *player) const {
         return player->hasFlag("yingzhouCanInvoke") and !(player->hasFlag("yingzhouInvoked"));
@@ -578,8 +579,11 @@ public:
         acard->setSkillName(objectName());
         return acard;
     }
-    bool isEnabledAtResponse(const Player *player, const QString &) const {
-        return !(player->hasFlag("yingzhouInvoked")) && (player->hasFlag("yingzhouNullFication") || player->hasFlag("yingzhouBasicCard"));
+    bool isEnabledAtResponse(const Player *player, const QString &pattern) const {
+        bool askBasicCard = pattern.contains("slash") || pattern.contains("jink") || pattern.contains("peach") || pattern.contains("analeptic");
+        bool askNullFication = pattern.contains("nullification");
+        return !(player->hasFlag("yingzhouInvoked")) && ((askNullFication && player->hasFlag("yingzhouNullFication")) || (askBasicCard && player->hasFlag("yingzhouBasicCard")));
+        //return !(player->hasFlag("yingzhouInvoked")) && (player->hasFlag("yingzhouNullFication") || player->hasFlag("yingzhouBasicCard"));
     }
     bool isEnabledAtNullification(const ServerPlayer *player) const {
         return !(player->hasFlag("yingzhouInvoked")) && player->hasFlag("yingzhouNullFication");
