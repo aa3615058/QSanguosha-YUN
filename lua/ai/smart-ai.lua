@@ -100,11 +100,11 @@ function setInitialTables()
     sgs.ai_type_name =          {"Skill", "Basic", "Trick", "Equip"}
     sgs.lose_equip_skill = "kofxiaoji|xiaoji|xuanfeng|nosxuanfeng"
     sgs.need_kongcheng = "lianying|noslianying|kongcheng|sijian|hengzheng"
-    sgs.masochism_skill =   "guixin|yiji|fankui|jieming|xuehen|neoganglie|ganglie|vsganglie|enyuan|fangzhu|nosenyuan|langgu|quanji|" ..
+    sgs.masochism_skill =   "siwu|guixin|yiji|fankui|jieming|xuehen|neoganglie|ganglie|vsganglie|enyuan|fangzhu|nosenyuan|langgu|quanji|" ..
                                         "zhiyu|renjie|tanlan|tongxin|huashen|duodao|chengxiang|benyu"
     sgs.wizard_skill =      "guicai|guidao|jilve|tiandu|luoying|noszhenlie|huanshi"
     sgs.wizard_harm_skill =     "guicai|guidao|jilve"
-    sgs.priority_skill =        "dimeng|haoshi|qingnang|nosjizhi|jizhi|guzheng|qixi|jieyin|guose|duanliang|jujian|fanjian|neofanjian|lijian|" ..
+    sgs.priority_skill =        "diaolue|dimeng|haoshi|qingnang|nosjizhi|jizhi|guzheng|qixi|jieyin|guose|duanliang|jujian|fanjian|neofanjian|lijian|" ..
                         "noslijian|manjuan|tuxi|qiaobian|yongsi|zhiheng|luoshen|nosrende|rende|mingce|wansha|gongxin|jilve|anxu|" ..
                         "qice|yinling|qingcheng|houyuan|zhaoxin|shuangren|zhaxiang|xiansi|junxing|bifa|yanyu|shenxian|jgtianyun"
     sgs.save_skill =        "jijiu|buyi|nosjiefan|chunlao|longhun"
@@ -112,19 +112,19 @@ function setInitialTables()
     sgs.Active_cardneed_skill =     "paoxiao|tianyi|xianzhen|shuangxiong|nosjizhi|jizhi|guose|duanliang|qixi|qingnang|luoyi|" ..
                                                 "guhuo|nosguhuo|jieyin|zhiheng|rende|nosrende|nosjujian|luanji|qiaobian|lirang|mingce|"..
                                                 "fuhun|spzhenwei|nosfuhun|nosluoyi|yinbing|jieyue|sanyao|xinzhan"
-    sgs.notActive_cardneed_skill =      "kanpo|guicai|guidao|beige|xiaoguo|liuli|tianxiang|jijiu|leiji|nosleiji"..
+    sgs.notActive_cardneed_skill =      "lianji|qiaopo|kanpo|guicai|guidao|beige|xiaoguo|liuli|tianxiang|jijiu|leiji|nosleiji"..
                                                     "qingjian|zhuhai|qinxue|jspdanqi"
     sgs.cardneed_skill =  sgs.Active_cardneed_skill .. "|" .. sgs.notActive_cardneed_skill
     sgs.drawpeach_skill =       "tuxi|qiaobian"
-    sgs.recover_skill =     "nosrende|rende|kofkuanggu|kuanggu|zaiqi|jieyin|qingnang|yinghun|hunzi|shenzhi|longhun|nosmiji|zishou|ganlu|xueji|shangshi|" ..
+    sgs.recover_skill =     "miyu|nosrende|rende|kofkuanggu|kuanggu|zaiqi|jieyin|qingnang|yinghun|hunzi|shenzhi|longhun|nosmiji|zishou|ganlu|xueji|shangshi|" ..
                         "nosshangshi|ytchengxiang|buqu|miji|quji"
-    sgs.use_lion_skill =         "longhun|duanliang|qixi|guidao|noslijian|lijian|jujian|nosjujian|zhiheng|mingce|yongsi|fenxun|gongqi|" ..
+    sgs.use_lion_skill =         "lienv|longhun|duanliang|qixi|guidao|noslijian|lijian|jujian|nosjujian|zhiheng|mingce|yongsi|fenxun|gongqi|" ..
                         "yinling|jilve|qingcheng|neoluoyi|diyyicong"
-    sgs.need_equip_skill =      "shensu|mingce|jujian|beige|yuanhu|huyuan|gongqi|nosgongqi|yanzheng|qingcheng|neoluoyi|longhun|shuijian|yinbing"
+    sgs.need_equip_skill =      "lienv|shensu|mingce|jujian|beige|yuanhu|huyuan|gongqi|nosgongqi|yanzheng|qingcheng|neoluoyi|longhun|shuijian|yinbing"
     sgs.judge_reason =      "bazhen|EightDiagram|wuhun|supply_shortage|tuntian|nosqianxi|nosmiji|indulgence|lightning|baonue"..
                                     "|nosleiji|leiji|caizhaoji_hujia|tieji|luoshen|ganglie|neoganglie|vsganglie|kofkuanggu"
     sgs.straight_damage_skill = "qiangxi|nosxuanfeng|duwu|danshou"
-    sgs.double_slash_skill = "paoxiao|fuhun|tianyi|xianzhen|zhaxiang|lihuo|jiangchi|shuangxiong|qiangwu|luanji"
+    sgs.double_slash_skill = "zhangui|paoxiao|fuhun|tianyi|xianzhen|zhaxiang|lihuo|jiangchi|shuangxiong|qiangwu|luanji"
     sgs.need_maxhp_skill = "yingzi|zaiqi|yinghun|hunzi|juejing|ganlu|zishou|miji|chizhong|xueji"..
                         "|quji|xuehen|shude|neojushou|tannang|fangzhu|nosshangshi|nosmiji"
     sgs.bad_skills = "benghuai|wumou|shiyong|yaowu|zaoyao|chanyuan|chouhai"
@@ -2246,6 +2246,8 @@ function SmartAI:filterEvent(event, player, data)
             elseif from and (from:hasFlag("ShenfenUsing") or from:hasFlag("FenchengUsing")) then
                 intention = 0
             elseif reason == "zhendu" then
+                intention = 0
+            elseif reason == "duanyan" then
                 intention = 0
             else
                 intention = 100

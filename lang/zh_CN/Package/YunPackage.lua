@@ -63,7 +63,7 @@ return {
 	[":xiaohan"] = "你可以将一张普通【杀】当【雷杀】使用；你对一名角色造成雷电伤害时，若该角色有牌，你可以防止此伤害，改为依次弃置其两张牌；<font color=\"blue\"><b>锁定技</b></font>，你是任何【闪电】造成伤害的来源。",
 	["#xiaohan-transfer"] = "%from 的“%arg”被触发，【<font color=\"yellow\"><b>闪电</b></font>】的伤害来源改为 %from",
 	["xiaohan-thunder_slash"] = "潇寒(<font color=yellow><b>雷杀</b></font>)",
-	["xiaohan-ice_sword"] = "潇寒(<font color=yellow><b>寒冰剑</b></font>)",
+	["xiaohan_ice_sword"] = "潇寒(<font color=yellow><b>寒冰剑</b></font>)",
 	["miyu"] = "秘雨",
 	[":miyu"] = "结束阶段，若你已受伤，你可以选择至多X名其他角色，视为这些角色各判定一次【闪电】。X为你已损失体力值的一半（向上取整）。",
 	["@miyu"] = "请选择至多X名其他角色，视为这些角色各判定一次【闪电】。X为你已损失体力值的一半（向上取整）",

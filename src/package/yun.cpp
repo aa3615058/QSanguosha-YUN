@@ -169,7 +169,7 @@ public:
         }
 
         for(int i = 0; i < count; i++) {
-            if(player->askForSkillInvoke(this)) {
+            if(player->askForSkillInvoke(this, data)) {
                 bool drawFlag = true;
                 if(player->getPhase() == Player::Play) {
                     if(player->hasFlag(tianchengOddFlag)) {
@@ -248,7 +248,6 @@ void QiaopoCard::onEffect(const CardEffectStruct &effect) const {
     DamageStruct damage2("qiaopo", damage.from, target, 1, damage.nature);
     damage2.transfer=true;
     damage2.transfer_reason="qiaopo";
-    //effect.from->tag["TransferDamage"] = QVariant::fromValue(damage2);
     target->getRoom()->damage(damage2);
 }
 class QiaopoViewAsSkill : public OneCardViewAsSkill {
@@ -308,7 +307,7 @@ public:
     bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const {
         if(triggerEvent == Damaged && player->hasSkill(this)) {
             for(int i = 0; i < data.value<DamageStruct>().damage; i++) {
-                if(player->isAlive() && player->askForSkillInvoke(this)) {
+                if(player->isAlive() && player->askForSkillInvoke(this, data)) {
                     player->drawCards(1, objectName());
                     if (!(player->isKongcheng())) {
                         int cardID;
@@ -500,14 +499,14 @@ public:
         if (damage.nature == DamageStruct::Thunder
             && damage.to->getMark("Equips_of_Others_Nullified_to_You") == 0
             && !damage.to->isNude() && damage.by_user
-            && player->askForSkillInvoke("xiaohan-ice_sword")) {
+            && player->askForSkillInvoke("xiaohan_ice_sword", data)) {
 
             room->broadcastSkillInvoke(objectName());
             room->notifySkillInvoked(player, objectName());
             LogMessage log;
             log.type = "#InvokeSkill";
             log.from = player;
-            log.arg = "xiaohan-ice_sword";
+            log.arg = "xiaohan_ice_sword";
             room->sendLog(log);
 
             if (damage.from->canDiscard(damage.to, "he")) {
@@ -621,8 +620,13 @@ public:
 
                         if(card->objectName() == "nullification") {
                             room->setPlayerFlag(player, "yingzhouNullFication");
+                            room->setPlayerFlag(player, "-yingzhouBasicCard");
                         } else if(card->isKindOf("BasicCard")) {
                             room->setPlayerFlag(player, "yingzhouBasicCard");
+                            room->setPlayerFlag(player, "-yingzhouNullFication");
+                        } else {
+                            room->setPlayerFlag(player, "-yingzhouBasicCard");
+                            room->setPlayerFlag(player, "-yingzhouNullFication");
                         }
                     }else if(card->isKindOf("EquipCard") || card->isKindOf("TrickCard")) {
                         room->setPlayerFlag(player, "-yingzhouCanInvoke");
@@ -854,7 +858,7 @@ public:
             }
             return false;
         }
-        if (flag && room->askForSkillInvoke(player, objectName())) {
+        if (flag && player->askForSkillInvoke(this, data)) {
             JudgeStruct judge;
             judge.good = true;
             judge.reason = objectName();

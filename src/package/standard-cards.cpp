@@ -381,20 +381,6 @@ bool Slash::targetFilter(const QList<const Player *> &targets, const Player *to_
         else {
             if(!(to_select->getNextAlive() == Self) && !(to_select->getLastAlive() == Self)) return false;
         }
-
-        /*int aliveCount = Self->aliveCount();
-
-        QList<int> seats;
-        foreach(const Player *p, targets) {
-            seats << p->getSeat();
-        }
-        int seat = to_select->getSeat();
-        if(seats.length() > 0) {
-            if(!(seats.contains(seat + 1)) && !(seats.contains(seat - 1)) && !(seats.contains(seat + aliveCount - 1)) && !(seats.contains(seat - aliveCount + 1))) return false;
-        } else {
-            int seatDistance = (Self->getSeat() - seat + aliveCount) % aliveCount;
-            if(seatDistance != 1 && seatDistance != aliveCount - 1) return false;
-        }*/
     }
 
     if (!Self->canSlash(to_select, this, distance_limit, rangefix, targets)) return false;
