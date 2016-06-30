@@ -441,7 +441,7 @@ public:
     }
 
     bool isEnabledAtPlay(const Player *player) const {
-        return !player->hasFlag("diaolueUsed");
+        return !player->hasUsed("diaolueCard");
     }
 
     const Card *viewAs(const Card *originalCard) const {
@@ -465,8 +465,8 @@ public:
     bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const {
         if(event == CardUsed && player->hasSkill(objectName())) {
             const Card* card = data.value<CardUseStruct>().card;
-            if(card->objectName() == "lure_tiger" && card->getSkillName() == objectName()){
-                room->setPlayerFlag(player, "diaolueUsed");
+            if(card->getSkillName() == objectName()){
+                player->addHistory("diaolueCard");
             }
         }else if(event == TrickEffect) {
             CardEffectStruct effect = data.value<CardEffectStruct>();
@@ -481,9 +481,9 @@ public:
                     p->loseMark("@diaohulishan");
                 }
             }
-            if(data.value<PhaseChangeStruct>().to == Player::Play) {
-                room->setPlayerFlag(player, "-diaolueUsed");
-            }
+            //if(data.value<PhaseChangeStruct>().to == Player::Play) {
+            //    room->setPlayerFlag(player, "-diaolueUsed");
+            //}
         }
         return false;
     }
@@ -570,7 +570,7 @@ public:
         response_or_use = true;
     }
     bool isEnabledAtPlay(const Player *player) const {
-        return player->hasFlag("yingzhouCanInvoke") and !(player->hasFlag("yingzhouInvoked"));
+        return player->hasFlag("yingzhouCanInvoke") and !(player->hasUsed("yingzhouCard"));
     }
     const Card *viewAs(const Card *originalCard) const {
         Card* acard = Sanguosha->cloneCard(Self->property("yingzhouCard").toString(), originalCard->getSuit(), originalCard->getNumber());
@@ -579,13 +579,10 @@ public:
         return acard;
     }
     bool isEnabledAtResponse(const Player *player, const QString &pattern) const {
-        bool askBasicCard = pattern.contains("slash") || pattern.contains("jink") || pattern.contains("peach") || pattern.contains("analeptic");
-        bool askNullFication = pattern.contains("nullification");
-        return !(player->hasFlag("yingzhouInvoked")) && ((askNullFication && player->hasFlag("yingzhouNullFication")) || (askBasicCard && player->hasFlag("yingzhouBasicCard")));
-        //return !(player->hasFlag("yingzhouInvoked")) && (player->hasFlag("yingzhouNullFication") || player->hasFlag("yingzhouBasicCard"));
+        return pattern.contains(Self->property("yingzhouCard").toString().toLower()) && !(player->hasUsed("yingzhouCard"));
     }
     bool isEnabledAtNullification(const ServerPlayer *player) const {
-        return !(player->hasFlag("yingzhouInvoked")) && player->hasFlag("yingzhouNullFication");
+        return !(player->hasUsed("yingzhouCard")) && player->property("yingzhouCard").toString() == "Nullification";
     }
 };
 
@@ -598,12 +595,8 @@ public:
     }
     bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const {
         if(triggerEvent == EventPhaseChanging && data.value<PhaseChangeStruct>().to == Player::Play) {
-            //for liaohua
-            room->setPlayerFlag(player, "-yingzhouInvoked");
             room->setPlayerFlag(player, "-yingzhouCanInvoke");
-            room->setPlayerFlag(player, "-yingzhouNullFication");
-            room->setPlayerFlag(player, "-yingzhouBasicCard");
-        }else if(player->getPhase() == Player::Play && !(player->hasFlag("yingzhouInvoked"))) {
+        }else if(player->getPhase() == Player::Play && !(player->hasUsed("yingzhouCard"))) {
             const Card *card = NULL;
             if(triggerEvent == CardResponded) {
                 card = data.value<CardResponseStruct>().m_card;
@@ -612,22 +605,12 @@ public:
             }
             if(card) {
                 if(card->getSkillName() == objectName()) {
-                    room->setPlayerFlag(player, "yingzhouInvoked");
+                    room->addPlayerHistory(player, "yingzhouCard");
+                    room->setPlayerFlag(player, "-yingzhouCanInvoke");
                 }else {
                     if(card->isNDTrick() || card->isKindOf("BasicCard")) {
                         room->setPlayerFlag(player, "yingzhouCanInvoke");
                         room->setPlayerProperty(player, "yingzhouCard", QVariant(card->getClassName()));
-
-                        if(card->objectName() == "nullification") {
-                            room->setPlayerFlag(player, "yingzhouNullFication");
-                            room->setPlayerFlag(player, "-yingzhouBasicCard");
-                        } else if(card->isKindOf("BasicCard")) {
-                            room->setPlayerFlag(player, "yingzhouBasicCard");
-                            room->setPlayerFlag(player, "-yingzhouNullFication");
-                        } else {
-                            room->setPlayerFlag(player, "-yingzhouBasicCard");
-                            room->setPlayerFlag(player, "-yingzhouNullFication");
-                        }
                     }else if(card->isKindOf("EquipCard") || card->isKindOf("TrickCard")) {
                         room->setPlayerFlag(player, "-yingzhouCanInvoke");
                     }
@@ -947,7 +930,7 @@ public:
     bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &) const {
         bool existFemale = false;
         foreach(ServerPlayer *p, room->getOtherPlayers(player)) {
-            //EX李云鹏的“蓝颜”实现不佳，回合开始时才修改性别，与此技能的时机冲突
+            //EX李云鹏的“蓝颜”，游戏开始时才修改性别，与此技能的时机冲突
             //EX李云鹏应该视为女性角色，这里做出弥补
             if (p->isFemale() || p->hasSkill("lanyan")) {
                 existFemale = true;
