@@ -62,7 +62,7 @@ public:
 
     bool triggerable(const ServerPlayer *target) const
     {
-        return (target != NULL && target->hasSkill(this) && target->getPhase() == Player::Start && target->getMark("@fanxiang") == 0);
+        return (target != NULL && target->hasSkill(this) && target->getPhase() == Player::Start && target->getMark("fanxiang") == 0);
     }
 
     bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &) const
