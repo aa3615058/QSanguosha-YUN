@@ -335,8 +335,8 @@ XingcanCard::XingcanCard() {
     will_throw = false;
     handling_method = Card::MethodNone;
 }
-bool XingcanCard::targetFilter(const QList<const Player *> &, const Player *, const Player *) const {
-    return true;
+bool XingcanCard::targetFilter(const QList<const Player *> &, const Player *to_select, const Player *) const {
+    return !to_select->hasFlag("xingcanCard");
 }
 void XingcanCard::onEffect(const CardEffectStruct &effect) const {
     ServerPlayer * player = effect.from;
@@ -361,6 +361,7 @@ void XingcanCard::onEffect(const CardEffectStruct &effect) const {
             }
         }
     }
+    room->setPlayerFlag(target, "xingcanCard");
 }
 
 class XingcanViewAsSkill : public OneCardViewAsSkill {
@@ -370,8 +371,9 @@ public:
         expand_pile = "&wire,wire";
     }
     bool isEnabledAtPlay(const Player *player) const {
-        return !player->hasUsed("XingcanCard") && (!(player->getPile("&wire").empty()) || !(player->getPile("wire").empty()));
+        return (!(player->getPile("&wire").empty()) || !(player->getPile("wire").empty()));
     }
+
     const Card *viewAs(const Card *originalCard) const {
         XingcanCard *xingcanCard = new XingcanCard;
         xingcanCard->addSubcard(originalCard);
@@ -402,8 +404,13 @@ public:
         }else if(triggerEvent == QuitDying && player->getMark("@ningxingcanyu") > 0) {
             room->setPlayerCardLimitation(player, "use,response", ".|.|.|hand", true);
         }else if(triggerEvent == EventPhaseChanging) {
-            if(data.value<PhaseChangeStruct>().to == Player::NotActive && player->hasSkill(this)) {
+            Player::Phase to = data.value<PhaseChangeStruct>().to;
+            if(to == Player::NotActive && player->hasSkill(this)) {
                 removeXingcanMarkAndLimitation(room);
+            } else if(to == Player::Play && player->hasSkill(this)) {
+                foreach(ServerPlayer * player, room->getAllPlayers()) {
+                    room->setPlayerFlag(player, "-xingcanCard");
+                }
             }
         }else if(triggerEvent == Death) {
             ServerPlayer *player = data.value<DeathStruct>().who;
