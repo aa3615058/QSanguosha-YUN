@@ -55,7 +55,7 @@ function sgs.ai_cardneed.qiaopo(to, card, self)
 end
 
 sgs.ai_skill_use["@@qiaopo"] = function(self, data)
-	local function getLeastValueDiamondCard(reverse = false)
+	local function getLeastValueDiamondCard(reverse)
 		local offhorse_avail, weapon_avail
 		for _, enemy in ipairs(self.enemies) do
 			if self:canAttack(enemy, self.player) then
@@ -133,7 +133,7 @@ sgs.ai_skill_use["@@qiaopo"] = function(self, data)
 	self:sort(self.enemies, "hp")
 
 	for _, enemy in ipairs(self.enemies) do
-		if enemy:getHp() <= 1 and enemy:isAlive() and enemy:getLostHp() + dmg.damage < 3) then
+		if enemy:getHp() <= 1 and enemy:isAlive() and enemy:getLostHp() + dmg.damage < 3 then
 			if (enemy:getHandcardNum() <= 2 or enemy:hasSkills("guose|leiji|ganglie|enyuan|qingguo|wuyan|kongcheng") or enemy:containsTrick("indulgence"))
 				and self:canAttack(enemy, dmg.from or self.room:getCurrent(), dmg.nature)
 				and not (dmg.card and dmg.card:getTypeId() == sgs.Card_TypeTrick and enemy:hasSkill("wuyan")) then
