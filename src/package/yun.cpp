@@ -1,5 +1,6 @@
 #include "settings.h"
 #include "standard.h"
+#include "maneuvering.h"
 #include "skill.h"
 #include "yun.h"
 #include "client.h"
@@ -240,6 +241,7 @@ QiaopoCard::QiaopoCard() {
     mute = true;
     will_throw = false;
     handling_method = Card::MethodNone;
+
 }
 void QiaopoCard::onEffect(const CardEffectStruct &effect) const {
     ServerPlayer *target = effect.to;
@@ -1143,6 +1145,126 @@ public:
     }
 };
 
+class LeiyaViewAsSkill : public ZeroCardViewAsSkill {
+public:
+    LeiyaViewAsSkill() : ZeroCardViewAsSkill("leiya") {
+        response_pattern = "@@leiya";
+    }
+    const Card *viewAs() const {
+        IronChain* card = new IronChain(Card::Spade, 0);
+        card->setSkillName(objectName());
+        return card;
+    }
+};
+
+class Leiya : public TriggerSkill {
+public:
+    Leiya() : TriggerSkill("leiya") {
+        events << Damage << CardFinished << Predamage ;
+        view_as_skill = new LeiyaViewAsSkill;
+    }
+
+    bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const {
+        if (triggerEvent == Damage) {
+            DamageStruct damage = data.value<DamageStruct>();
+            if(damage.card && damage.card->isKindOf("Slash")) {
+                room->setPlayerFlag(player, "leiya");
+            }
+        }else if(triggerEvent == CardFinished) {
+            if(player->hasFlag("leiya") && data.value<CardUseStruct>().card->isKindOf("Slash")) {
+                room->setPlayerFlag(player, "-leiya");
+                room->askForUseCard(player, "@@leiya", "@leiya-card");
+            }
+        } else if(triggerEvent == Predamage) {
+            DamageStruct damage = data.value<DamageStruct>();
+            if (damage.from == player && (damage.card->isKindOf("Slash") || (damage.card->isKindOf("Duel") && damage.by_user == true))) {
+                room->broadcastSkillInvoke(objectName());
+                room->sendCompulsoryTriggerLog(player, objectName());
+                damage.nature = DamageStruct::Thunder;
+                data.setValue(damage);
+            }
+        }
+        return false;
+    }
+};
+
+class ZhenyueViewAsSkill : public ZeroCardViewAsSkill {
+public:
+    ZhenyueViewAsSkill() : ZeroCardViewAsSkill("zhenyue") {
+        response_pattern = "@@zhenyue";
+    }
+    const Card *viewAs() const {
+        ThunderSlash* card = new ThunderSlash(Card::NoSuit, 0);
+        card->setSkillName(objectName());
+        return card;
+    }
+};
+
+class Zhenyue : public TriggerSkill
+{
+public:
+    Zhenyue() : TriggerSkill("zhenyue")
+    {
+        events << EventPhaseChanging;
+        view_as_skill = new ZhenyueViewAsSkill;
+    }
+
+    bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const
+    {
+        PhaseChangeStruct change = data.value<PhaseChangeStruct>();
+        if (change.to == Player::Draw && !player->isSkipped(Player::Draw) && !player->isSkipped(Player::Play) && !player->isSkipped(Player::Discard)) {
+            if (Slash::IsAvailable(player)) {
+                int x = player->getLostHp() / 2 + player->getLostHp() % 2;
+                if(x > 0) {
+                    if(player->askForSkillInvoke(this, data)) {
+                        QString zhenyue_distance = QString("@zhenyue_distance");
+                        QString zhenyue_targetmod = QString("@zhenyue_targetmod");
+
+                        QString choice = room->askForChoice(player, objectName(), zhenyue_distance + "+" + zhenyue_targetmod ,data);
+                        if(choice == zhenyue_distance) {
+                            room->setPlayerFlag(player, "zhenyue_distance");
+                        } else {
+                            room->setPlayerFlag(player, "zhenyue_targetmod");
+                        }
+                    }else {
+                        return false;
+                    }
+                }
+
+                if(room->askForUseCard(player, "@@zhenyue", "@zhenyue-slash")) {
+                    player->skip(Player::Draw, true);
+                    player->skip(Player::Play, true);
+                    player->skip(Player::Discard, true);
+                }
+                room->setPlayerFlag(player, "-zhenyue_distance|-zhenyue_targetmod");
+            }
+        }
+        return false;
+    }
+};
+
+class ZhenyueTargetMod : public TargetModSkill
+{
+public:
+    ZhenyueTargetMod() : TargetModSkill("#zhenyue-mod"){}
+
+    int getDistanceLimit(const Player *from, const Card *card) const
+    {
+        if (card->getSkillName() == "zhenyue" && from->hasFlag("zhenyue_distance"))
+            return from->getLostHp() / 2 + from->getLostHp() % 2;
+        else
+            return 0;
+    }
+
+    int getExtraTargetNum(const Player *from, const Card *card) const
+    {
+        if (card->getSkillName() == "zhenyue" && from->hasFlag("zhenyue_targetmod"))
+            return from->getLostHp() / 2 + from->getLostHp() % 2;
+        else
+            return 0;
+    }
+};
+
 YunEXPackage::YunEXPackage()
     :Package("yunEX")
 {
@@ -1161,6 +1283,12 @@ YunEXPackage::YunEXPackage()
     General *EXhanjing = new General(this, "EXhanjing", "wu", 3, false); // YunEX 003
     EXhanjing->addSkill(new Duanyan);
     EXhanjing->addSkill(new Pingfeng);
+
+    General *EXxiaosa = new General(this, "EXxiaosa", "wei", 4, false); // YunEX 004
+    EXxiaosa->addSkill(new Leiya);
+    EXxiaosa->addSkill(new Zhenyue);
+    EXxiaosa->addSkill(new ZhenyueTargetMod);
+    related_skills.insertMulti("zhenyue", "#zhenyue-mod");
 
     addMetaObject<LienvCard>();
     addMetaObject<YigeCard>();
