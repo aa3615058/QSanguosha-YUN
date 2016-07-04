@@ -233,7 +233,7 @@ public:
                 jingmeizi->drawCards(1, objectName());
             }
         }
-        return true;
+        return false;
      }
 };
 
@@ -1177,7 +1177,7 @@ public:
             }
         } else if(triggerEvent == Predamage) {
             DamageStruct damage = data.value<DamageStruct>();
-            if (damage.from == player && (damage.card->isKindOf("Slash") || (damage.card->isKindOf("Duel") && damage.by_user == true))) {
+            if (damage.from == player && (damage.card->isKindOf("Slash") || (damage.card->isKindOf("Duel")))) {
                 room->broadcastSkillInvoke(objectName());
                 room->sendCompulsoryTriggerLog(player, objectName());
                 damage.nature = DamageStruct::Thunder;
