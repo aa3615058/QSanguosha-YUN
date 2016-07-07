@@ -123,7 +123,6 @@ YunCardPackage::YunCardPackage()
     QList<Card *> cards;
     cards << new LureTiger(Card::Heart, 2);
 
-    //skills << new LureTigerProhibit << new LureTigerSkill;
     skills << new LureTigerProhibit << new LureTigerSkill;
     insertRelatedSkills("lure_tiger_effect", "#lure_tiger-prohibit");
 
@@ -475,12 +474,13 @@ public:
         if(event == CardUsed && player->hasSkill(objectName())) {
             const Card* card = data.value<CardUseStruct>().card;
             if(card->getSkillName() == objectName()){
-                player->addHistory("diaolueCard");
+                room->addPlayerHistory(player, "diaolueCard");
             }
         }else if(event == TrickEffect) {
             CardEffectStruct effect = data.value<CardEffectStruct>();
             const Card* card = effect.card;
-            if(card->objectName() == "lure_tiger" && effect.from->hasSkill(objectName())) {
+            ServerPlayer *from = effect.from;
+            if(card->objectName() == "lure_tiger" && from->hasSkill(objectName()) && (from->getGeneralName() == "yangwenqi" || from->getGeneral2Name() == "yangwenqi")) {
                 player->gainMark("@diaohulishan");
             }
         }
@@ -490,9 +490,6 @@ public:
                     p->loseMark("@diaohulishan");
                 }
             }
-            //if(data.value<PhaseChangeStruct>().to == Player::Play) {
-            //    room->setPlayerFlag(player, "-diaolueUsed");
-            //}
         }
         return false;
     }
@@ -588,10 +585,15 @@ public:
         return acard;
     }
     bool isEnabledAtResponse(const Player *player, const QString &pattern) const {
-        return pattern.contains(Self->property("yingzhouCard").toString().toLower()) && !(player->hasUsed("yingzhouCard"));
+        QString yingzhouCard = Self->property("yingzhouCard").toString().toLower();
+        if(!yingzhouCard.isEmpty() && player->getPhase() == Player::Play) {
+            return pattern.contains(yingzhouCard) && !(player->hasUsed("yingzhouCard"));
+        }else {
+            return false;
+        }
     }
     bool isEnabledAtNullification(const ServerPlayer *player) const {
-        return !(player->hasUsed("yingzhouCard")) && player->property("yingzhouCard").toString() == "Nullification";
+        return player->getPhase() == Player::Play && !(player->hasUsed("yingzhouCard")) && player->property("yingzhouCard").toString() == "Nullification";
     }
 };
 
@@ -605,6 +607,7 @@ public:
     bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const {
         if(triggerEvent == EventPhaseChanging && data.value<PhaseChangeStruct>().to == Player::Play) {
             room->setPlayerFlag(player, "-yingzhouCanInvoke");
+            room->setPlayerProperty(player, "yingzhouCard", QVariant(""));
         }else if(player->getPhase() == Player::Play && !(player->hasUsed("yingzhouCard"))) {
             const Card *card = NULL;
             if(triggerEvent == CardResponded) {
@@ -616,6 +619,7 @@ public:
                 if(card->getSkillName() == objectName()) {
                     room->addPlayerHistory(player, "yingzhouCard");
                     room->setPlayerFlag(player, "-yingzhouCanInvoke");
+                    room->setPlayerProperty(player, "yingzhouCard", QVariant(""));
                 }else {
                     if(card->isNDTrick() || card->isKindOf("BasicCard")) {
                         room->setPlayerFlag(player, "yingzhouCanInvoke");
@@ -889,13 +893,11 @@ void YigeCard::onEffect(const CardEffectStruct &effect) const {
 
     foreach(const Skill * skill, target->getVisibleSkillList()) {
         //EX怀贝贝和左慈一样，不能复制主公技，限定技，觉醒技
-        //这个框架贯石斧实现存在一定问题，一名角色装备贯石斧然后卸载后，会在技能列表里多出一个“贯石斧”的技能
         //黄天送牌，制霸拼点，陷嗣出杀，这些本不属于技能的范畴，但这个框架用技能来实现，这里也要屏蔽掉
         if (skill->isLordSkill() || skill->getFrequency() == Skill::Limited || skill->getFrequency() == Skill::Wake
                 || skill->objectName() == "huangtian_attach"
                 || skill->objectName() == "zhiba_pindian"
                 || skill->objectName() == "xiansi_slash") {
-            //|| skill->objectName() == "axe"
             continue;
         }
         if (!(skill_names.contains(skill->objectName()))) {
