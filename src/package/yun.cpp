@@ -217,7 +217,7 @@ public:
         ServerPlayer* victim = data.value<DamageStruct>().to;
         QList<ServerPlayer *> jingmeizis;
         foreach (ServerPlayer *player, room->getAllPlayers()) {
-            if (player->hasSkill(this) && player->isAlive() && player->getPhase() == Player::NotActive && player->canSlash(victim) && !(player->isNude())) {
+            if (player->hasSkill(this) && player->isAlive() && player->getPhase() == Player::NotActive && player->canSlash(victim)) {
                 jingmeizis.append(player);
             }
         }
