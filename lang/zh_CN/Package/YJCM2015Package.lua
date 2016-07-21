@@ -68,8 +68,7 @@ return {
 	[":zhaofu"] = "主公技。锁定技。你距离为1的角色视为在其他吴势力角色的攻击范围内。",
 
 	["#yj_xiahoushi"] = "采缘撷睦",
-	["yj_xiahoushi"] = "YJ夏侯氏",
-	["&yj_xiahoushi"] = "夏侯氏",
+	["yj_xiahoushi"] = "夏侯氏",
 	["qiaoshi"] = "樵拾",
 	[":qiaoshi"] = "其他角色的结束阶段开始时，若你的手牌数与其相等，则你可以与其各摸一张牌。",
 	["yjyanyu"] = "燕语",

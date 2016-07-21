@@ -425,6 +425,9 @@ public:
         if (triggerEvent == EventPhaseStart) {
             if (player->getPile("rice").isEmpty() && player->getPhase() == Player::Finish) {
                 if (player->askForSkillInvoke(this)) {
+                    room->broadcastSkillInvoke(objectName());
+                    room->notifySkillInvoked(player, objectName());
+
                     player->drawCards(2, objectName());
                     if (!player->isNude()) {
                         const Card *dummy = NULL;
@@ -504,9 +507,11 @@ public:
             return false;
 
         for (int i = 0; i < damage.damage; ++i) {
-            if (!room->askForUseCard(p, "@@bushi", "@bushi", -1, Card::MethodNone))
-                break;
-
+            if (room->askForUseCard(p, "@@bushi", "@bushi", -1, Card::MethodNone)) {
+                room->broadcastSkillInvoke(objectName());
+                room->notifySkillInvoked(player, objectName());
+            }
+            else break;
             if (p->isDead() || player->getPile("rice").isEmpty())
                 break;
         }
@@ -567,7 +572,13 @@ public:
         player->tag["judgeData"] = QVariant::fromValue(judge);
         Room *room = player->getRoom();
         bool invoke = room->askForUseCard(player, "@@midao", prompt, -1, Card::MethodNone);
+        if(invoke) {
+            room->broadcastSkillInvoke(objectName());
+            room->notifySkillInvoked(player, objectName());
+        }
+
         player->tag.remove("judgeData");
+
         if (invoke && player->tag.contains("midao")) {
             int id = player->tag.value("midao", player->getPile("rice").first()).toInt();
             return Sanguosha->getCard(id);
@@ -644,13 +655,26 @@ public:
             foreach (const Card *card, use.to.first()->getHandcards())
                 if (card->getSuit() == Card::Diamond)
                     ++n;
-            if (n > 0) choices << "drawCards";
-            choices << "addDamage" << "cancel";
-            QString choice = room->askForChoice(player, objectName(), choices.join("+"));
-            if (choice == "drawCards")
-                player->drawCards(n);
-            else if (choice == "addDamage")
-                player->tag["fengpoaddDamage" + use.card->toString()] = n;
+            if (n > 0) {
+                choices << "drawCards" << "addDamage" << "cancel";
+                QString choice = room->askForChoice(player, objectName(), choices.join("+"));
+                if (choice != "cancel") {
+                    LogMessage log;
+                    log.type = "#InvokeSkill";
+                    log.from = player;
+                    log.arg = objectName();
+                    room->sendLog(log);
+
+                    room->broadcastSkillInvoke(objectName());
+                    room->notifySkillInvoked(player, objectName());
+
+                    if (choice == "drawCards")
+                        player->drawCards(n);
+                    else if (choice == "addDamage")
+                        player->tag["fengpoaddDamage" + use.card->toString()] = n;
+                }
+
+            }
         } else if (e == DamageCaused) {
             DamageStruct damage = data.value<DamageStruct>();
             if (damage.card == NULL || damage.from == NULL)
@@ -680,23 +704,6 @@ OLPackage::OLPackage()
     zhugeke->addSkill(new Aocai);
     zhugeke->addSkill(new Duwu);
 
-    /*General *ol_masu = new General(this, "ol_masu", "shu", 3);
-    ol_masu->addSkill(new Sanyao);
-    ol_masu->addSkill(new Zhiman);
-
-    General *ol_yujin = new General(this, "ol_yujin", "wei");
-    ol_yujin->addSkill(new Jieyue);
-
-    General *ol_liubiao = new General(this, "ol_liubiao", "qun", 3);
-    ol_liubiao->addSkill(new OlZishou);
-    ol_liubiao->addSkill(new OlZishouProhibit);
-    ol_liubiao->addSkill("zongshi");
-
-    /*General *ol_xusheng = new General(this, "ol_xusheng", "wu");
-    ol_xusheng->addSkill(new OlPojun);
-    ol_xusheng->addSkill(new FakeMoveSkill("olpojun"));
-    related_skills.insertMulti("olpojun", "#olpojun-fake-move");*/
-
     General *shixie = new General(this, "shixie", "qun", 3);
     shixie->addSkill(new Biluan);
     shixie->addSkill(new BiluanDist);
@@ -715,11 +722,6 @@ OLPackage::OLPackage()
     mayl->addSkill(new Fengpo);
     mayl->addSkill(new FengpoRecord);
     related_skills.insertMulti("fengpo", "#fengpo-record");
-
-    /*General *zhangjiao = new General(this, "ol_zhangjiao$", "qun", 3);
-    zhangjiao->addSkill(new OlLeiji);
-    zhangjiao->addSkill("guidao");
-    zhangjiao->addSkill("huangtian");*/
 
     addMetaObject<AocaiCard>();
     addMetaObject<DuwuCard>();

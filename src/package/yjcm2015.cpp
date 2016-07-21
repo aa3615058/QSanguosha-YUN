@@ -32,6 +32,9 @@ public:
         if (j.who == NULL)
             return;
 
+        room->broadcastSkillInvoke(objectName());
+        room->notifySkillInvoked(target, objectName());
+
         j.pattern = ".";
         j.play_animation = false;
         j.reason = "huituo";
@@ -120,10 +123,14 @@ public:
     bool onPhaseChange(ServerPlayer *target) const
     {
         ServerPlayer *p = target->tag.value("mingjian").value<ServerPlayer *>();
+        Room* room = target->getRoom();
         target->tag.remove("mingjian");
 
         if (p == NULL)
             return false;
+
+        room->broadcastSkillInvoke("mingjian");
+        room->notifySkillInvoked(target, "mingjian");
 
         QList<Player::Phase> phase;
         phase << Player::Play;
@@ -166,6 +173,7 @@ public:
                 room->doSuperLightbox(generalName, "xingshuai");
             } else {
                 room->broadcastSkillInvoke(objectName());
+                room->notifySkillInvoked(player, objectName());
                 room->doSuperLightbox("caorui", "xingshuai");
             }
 
@@ -226,6 +234,9 @@ public:
                 ServerPlayer *to = use.to.first();
                 player->tag["taoxi_carduse"] = data;
                 if (to != player && !to->isKongcheng() && player->askForSkillInvoke(objectName(), QVariant::fromValue(to))) {
+                    room->broadcastSkillInvoke(objectName());
+                    room->notifySkillInvoked(player, objectName());
+
                     room->setPlayerFlag(player, "TaoxiUsed");
                     room->setPlayerFlag(player, "TaoxiRecord");
                     int id = room->askForCardChosen(player, to, "h", objectName(), false);
@@ -429,7 +440,11 @@ public:
 
     bool onPhaseChange(ServerPlayer *target) const
     {
+        Room *room = target->getRoom();
         if (target->askForSkillInvoke(this)) {
+            room->broadcastSkillInvoke(objectName());
+            room->notifySkillInvoked(target, objectName());
+
             target->drawCards(2, "jigong");
             target->getRoom()->setPlayerFlag(target, "jigong");
         }
@@ -474,6 +489,9 @@ public:
             return false;
 
         if (player->askForSkillInvoke(this)) {
+            room->broadcastSkillInvoke(objectName());
+            room->notifySkillInvoked(player, objectName());
+
             current->drawCards(1, objectName());
 
             QList<ServerPlayer *> mosts;
@@ -686,6 +704,9 @@ public:
 
         if (!room->askForCard(player, "..", "@qinwang-discard", data, "qinwang"))
             return false;
+
+        room->broadcastSkillInvoke(objectName());
+        room->notifySkillInvoked(player, objectName());
 
         player->setFlags("qinwangjijiang");
         try {
@@ -966,6 +987,9 @@ public:
             QString pattern = data.toStringList().first();
             if (ZhenshanVS::canExchange(player) && (pattern == "slash" || pattern == "jink")
                 && player->askForSkillInvoke(objectName(), data)) {
+                room->broadcastSkillInvoke(objectName());
+                room->notifySkillInvoked(player, objectName());
+
                 ZhenshanCard::askForExchangeHand(player);
                 room->setPlayerFlag(player, "ZhenshanUsed");
                 Card *card = Sanguosha->cloneCard(pattern);
@@ -1026,31 +1050,6 @@ public:
     }
 };
 
-/*
-class YanzhuTrig : public TriggerSkill
-{
-public:
-    YanzhuTrig() : TriggerSkill("yanzhu")
-    {
-        events << EventLoseSkill;
-        view_as_skill = new Yanzhu;
-    }
-
-    bool triggerable(const ServerPlayer *target) const
-    {
-        return target != NULL && target->isAlive();
-    }
-
-    bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const
-    {
-        if (data.toString() == "yanzhu")
-            room->setPlayerMark(player, "yanzhu_lost", 1);
-
-        return false;
-    }
-};
-*/
-
 XingxueCard::XingxueCard()
 {
 
@@ -1109,7 +1108,11 @@ public:
 
     bool onPhaseChange(ServerPlayer *target) const
     {
-        target->getRoom()->askForUseCard(target, "@@xingxue", "@xingxue");
+        Room *room = target->getRoom();
+        if (target->getRoom()->askForUseCard(target, "@@xingxue", "@xingxue")) {
+            room->broadcastSkillInvoke(objectName());
+            room->notifySkillInvoked(target, objectName());
+        }
         return false;
     }
 };
@@ -1135,6 +1138,9 @@ public:
                 continue;
 
             if (p->askForSkillInvoke(objectName(), QVariant::fromValue(player))) {
+                room->broadcastSkillInvoke(objectName());
+                room->notifySkillInvoked(player, objectName());
+
                 QList<ServerPlayer *> l;
                 l << p << player;
                 room->sortByActionOrder(l);
@@ -1235,9 +1241,11 @@ public:
 
         ServerPlayer *male = room->askForPlayerChosen(player, malelist, objectName(), "@yjyanyu-give", true);
 
-        if (male != NULL)
+        if (male != NULL) {
+            //room->broadcastSkillInvoke(objectName());
+            room->notifySkillInvoked(player, objectName());
             male->drawCards(2, objectName());
-
+        }
         return false;
     }
 };
@@ -1722,9 +1730,12 @@ public:
 
         foreach (ServerPlayer *zhongyao, room->getAllPlayers()) {
             if (TriggerSkill::triggerable(zhongyao) && player != zhongyao) {
-                ServerPlayer *p = room->askForPlayerChosen(zhongyao, use.to, "zuoding", "@zuoding", true, true);
-                if (p != NULL)
-                    p->drawCards(1, "zuoding");
+                ServerPlayer *p = room->askForPlayerChosen(zhongyao, use.to, objectName(), "@zuoding", true, true);
+                if (p != NULL) {
+                    room->broadcastSkillInvoke(objectName());
+                    room->notifySkillInvoked(player, objectName());
+                    p->drawCards(1, objectName());
+                }
             }
         }
         
