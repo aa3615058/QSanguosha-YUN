@@ -26,8 +26,8 @@ end
 
 sgs.lianji_keep_value = {
 	Peach = 5,
-	Analeptic = 4.8,
-	Jink = 5.2,
+	Analeptic = 4.6,
+	Jink = 4.8,
 	Slash = 5.4,
 	ThunderSlash = 5.5,
 	FireSlash = 5.6,
@@ -42,16 +42,16 @@ sgs.lianji_keep_value = {
 	IceSword = 4.5,
 	Crossbow = 4,
 	Duel = 4,
-	DefensiveHorse = 4,
+	DefensiveHorse = 5,
 	OffensiveHorse = 5,
 }
 
 sgs.qiaopo_suit_value = {
-	diamond = 4.2
+	diamond = 4.7
 }
 
 function sgs.ai_cardneed.qiaopo(to, card, self)
-	return card:getSuit() == sgs.Card_Diamond and getKnownCard(to, self.player, "diamond", false, "he") < 2
+	return card:getSuit() == sgs.Card_Diamond and getKnownCard(to, self.player, "diamond", false, "he") <= 1
 end
 
 sgs.ai_skill_use["@@qiaopo"] = function(self, data)
@@ -137,7 +137,7 @@ sgs.ai_skill_use["@@qiaopo"] = function(self, data)
 			if (enemy:getHandcardNum() <= 2 or enemy:hasSkills("guose|leiji|ganglie|enyuan|qingguo|wuyan|kongcheng") or enemy:containsTrick("indulgence"))
 				and self:canAttack(enemy, dmg.from or self.room:getCurrent(), dmg.nature)
 				and not (dmg.card and dmg.card:getTypeId() == sgs.Card_TypeTrick and enemy:hasSkill("wuyan")) then
-				return "@TianxiangCard=" .. card_id .. "->" .. enemy:objectName()
+				return "@QiaopoCard=" .. card_id .. "->" .. enemy:objectName()
 			end
 		end
 	end

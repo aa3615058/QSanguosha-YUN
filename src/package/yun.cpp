@@ -12,6 +12,8 @@
 #include "wrapped-card.h"
 #include "room.h"
 #include "roomthread.h"
+#include "json.h"
+#include "protocol.h"
 
 LureTiger::LureTiger(Card::Suit suit, int number)
     : TrickCard(suit, number) {
@@ -646,7 +648,7 @@ void QifengCard::onEffect(const CardEffectStruct &effect) const {
 
     bool invoke_transfer = false;
     if (target->canDiscard(target, "h")) {
-        if (!(room->askForDiscard(target, "qifeng", 1, 1, true, true, "@qifeng-discard", ".|red"))) {
+        if (!(room->askForDiscard(target, "qifeng", 1, 1, true, false, "@qifeng-discard", ".|red"))) {
             invoke_transfer = true;
         }
     }
@@ -744,17 +746,30 @@ ADD_PACKAGE(Yun)
 class Lanyan : public TriggerSkill{
 public:
     Lanyan() : TriggerSkill("lanyan") {
-        events << GameStart << EventPhaseStart << EventPhaseChanging << EventAcquireSkill << EventLoseSkill;
+        events << GameStart << TurnStart << EventPhaseChanging << EventAcquireSkill << EventLoseSkill;
         frequency = Compulsory;
     }
     bool triggerable(const ServerPlayer *target) const {
         return target != NULL;
     }
-    void EXliyunpengImageChanged(QString name, ServerPlayer* player, Room *room) const {
-        if (player->getGeneralName() == name || player->getGeneral2Name() == name) {
-            return;
+    void changeEXliyunpengGender(ServerPlayer* player, Room* room, bool female) const {
+        QString name;
+        QString oName;
+        if(female) {
+            name = "EXliyunpeng_female";
+            oName = "EXliyunpeng";
+        }else {
+            oName = "EXliyunpeng_female";
+            name = "EXliyunpeng";
         }
-        if (name == "EXliyunpeng_female") {
+        bool isSecondGeneral;
+        if(player->getGeneralName() == oName) {
+            isSecondGeneral = false;
+        }else if(player->getGeneral2Name() == oName) {
+            isSecondGeneral = true;
+        } else return;
+
+        if(female) {
             room->notifySkillInvoked(player, objectName());
             LogMessage log;
             log.type = "#lanyan";
@@ -763,34 +778,42 @@ public:
             log.arg2 = "female";
             room->sendLog(log);
         }
-        if (player->getGeneralName() == "EXliyunpeng" || player->getGeneralName() == "EXliyunpeng_female") {
-            room->changeHero(player, name, false, false, false, false);
+        JsonArray arg;
+        arg << (int)QSanProtocol::S_GAME_EVENT_CHANGE_HERO;
+        arg << player->objectName();
+        arg << name;
+        arg << isSecondGeneral;
+        arg << false;
+        room->doBroadcastNotify(QSanProtocol::S_COMMAND_LOG_EVENT, arg);
+        if(isSecondGeneral) {
+            room->setPlayerProperty(player, "general2", name);
+        } else {
+            room->setPlayerProperty(player, "general", name);
         }
-        if (player->getGeneral2Name() == "EXliyunpeng" || player->getGeneral2Name() == "EXliyunpeng_female") {
-            room->changeHero(player, name, false, false, true, false);
+        if(female) {
+            player->setGender(General::Female);
+        } else {
+            player->setGender(player->getGeneral()->getGender());
         }
     }
     bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const {
-      if (triggerEvent == EventPhaseStart && player->hasSkill(this) && player->getPhase() == Player::Start) {
-          player->setGender(player->getGeneral()->getGender());
-          EXliyunpengImageChanged("EXliyunpeng", player, room);
-      }
-      else if (triggerEvent == EventPhaseChanging && player->hasSkill(this) && data.value<PhaseChangeStruct>().to == Player::NotActive) {
-          player->setGender(General::Female);
-          EXliyunpengImageChanged("EXliyunpeng_female", player, room);
-      }
-      else if (triggerEvent == GameStart && player->hasSkill(this)) {
-          player->setGender(General::Female);
-          EXliyunpengImageChanged("EXliyunpeng_female", player, room);
-      }
-      else if (triggerEvent == EventLoseSkill && data.toString() == objectName()) {
-          player->setGender(player->getGeneral()->getGender());
-          EXliyunpengImageChanged("EXliyunpeng", player, room);
-      }
-      else if (triggerEvent == EventAcquireSkill && data.toString() == objectName() && player->getPhase() == Player::NotActive) {
-          player->setGender(General::Female);
-          EXliyunpengImageChanged("EXliyunpeng_female", player, room);
-      }
+        //if (triggerEvent == EventPhaseStart && player->hasSkill(this) && player->getPhase() == Player::Start) {
+        if(triggerEvent == TurnStart && player->hasSkill(this)) {
+            changeEXliyunpengGender(player, room, false);
+        }
+        else if (triggerEvent == EventPhaseChanging && player->hasSkill(this) && data.value<PhaseChangeStruct>().to == Player::NotActive) {
+        //else if(triggerEvent == TurnedOver && player->hasSkill(this)) {
+            changeEXliyunpengGender(player, room, true);
+        }
+        else if (triggerEvent == GameStart && player->hasSkill(this)) {
+            changeEXliyunpengGender(player, room, true);
+        }
+        else if (triggerEvent == EventLoseSkill && data.toString() == objectName()) {
+            changeEXliyunpengGender(player, room, false);
+        }
+        else if (triggerEvent == EventAcquireSkill && data.toString() == objectName() && player->getPhase() == Player::NotActive) {
+            changeEXliyunpengGender(player, room, false);
+        }
         return false;
     }
 };
