@@ -584,6 +584,7 @@ public:
         Card* acard = Sanguosha->cloneCard(Self->property("yingzhouCard").toString(), originalCard->getSuit(), originalCard->getNumber());
         acard->addSubcard(originalCard->getId());
         acard->setSkillName(objectName());
+        acard->setCanRecast(false);
         return acard;
     }
     bool isEnabledAtResponse(const Player *player, const QString &pattern) const {
