@@ -1,5 +1,5 @@
 for %%a in (cd .) do (
-set release_dir=%%~dpaQSanguosha-YUN-Release\
+set release_dir=%%~dpaQSanguosha-YUN-Build\
 )
 for %%a in (cd .) do (
 set exe_dir=%%~dpaQSanguosha-YUN-EXE\
