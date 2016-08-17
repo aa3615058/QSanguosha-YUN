@@ -898,8 +898,6 @@ void ServerPlayer::loseSkill(const QString &skill_name)
 
 void ServerPlayer::setGender(General::Gender gender)
 {
-    if (gender == getGender())
-        return;
     Player::setGender(gender);
     JsonArray args;
     args << (int)QSanProtocol::S_GAME_EVENT_CHANGE_GENDER;

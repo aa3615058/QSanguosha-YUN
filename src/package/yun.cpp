@@ -753,57 +753,11 @@ public:
     bool triggerable(const ServerPlayer *target) const {
         return target != NULL;
     }
-    void changeEXliyunpengGender(ServerPlayer* player, Room* room, bool female) const {
-        QString name;
-        QString oName;
-        if(female) {
-            name = "EXliyunpeng_female";
-            oName = "EXliyunpeng";
-        }else {
-            oName = "EXliyunpeng_female";
-            name = "EXliyunpeng";
-        }
-        bool isSecondGeneral;
-        if(player->getGeneralName() == oName) {
-            isSecondGeneral = false;
-        }else if(player->getGeneral2Name() == oName) {
-            isSecondGeneral = true;
-        } else return;
-
-        if(female) {
-            room->notifySkillInvoked(player, objectName());
-            LogMessage log;
-            log.type = "#lanyan";
-            log.from = player;
-            log.arg = objectName();
-            log.arg2 = "female";
-            room->sendLog(log);
-        }
-        JsonArray arg;
-        arg << (int)QSanProtocol::S_GAME_EVENT_CHANGE_HERO;
-        arg << player->objectName();
-        arg << name;
-        arg << isSecondGeneral;
-        arg << false;
-        room->doBroadcastNotify(QSanProtocol::S_COMMAND_LOG_EVENT, arg);
-        if(isSecondGeneral) {
-            room->setPlayerProperty(player, "general2", name);
-        } else {
-            room->setPlayerProperty(player, "general", name);
-        }
-        if(female) {
-            player->setGender(General::Female);
-        } else {
-            player->setGender(player->getGeneral()->getGender());
-        }
-    }
     bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const {
-        //if (triggerEvent == EventPhaseStart && player->hasSkill(this) && player->getPhase() == Player::Start) {
         if(triggerEvent == TurnStart && player->hasSkill(this)) {
             changeEXliyunpengGender(player, room, false);
         }
         else if (triggerEvent == EventPhaseChanging && player->hasSkill(this) && data.value<PhaseChangeStruct>().to == Player::NotActive) {
-        //else if(triggerEvent == TurnedOver && player->hasSkill(this)) {
             changeEXliyunpengGender(player, room, true);
         }
         else if (triggerEvent == GameStart && player->hasSkill(this)) {
@@ -813,14 +767,31 @@ public:
             changeEXliyunpengGender(player, room, false);
         }
         else if (triggerEvent == EventAcquireSkill && data.toString() == objectName() && player->getPhase() == Player::NotActive) {
-            changeEXliyunpengGender(player, room, false);
+            changeEXliyunpengGender(player, room, true);
         }
         return false;
     }
+private:
+    void changeEXliyunpengGender(ServerPlayer* player, Room* room, bool lanyan_invoke) const {
+        if(lanyan_invoke) {
+            room->notifySkillInvoked(player, objectName());
+            LogMessage log;
+            log.type = "#lanyan";
+            log.from = player;
+            log.arg = objectName();
+            log.arg2 = "female";
+            room->sendLog(log);
+
+            room->setPlayerMark(player, "lanyan", 1);
+            player->setGender(General::Female);
+        } else {
+            room->setPlayerMark(player, "lanyan", 0);
+            player->setGender(player->getGeneral()->getGender());
+        }
+    }
 };
 
-LienvCard::LienvCard() {
-}
+LienvCard::LienvCard() {}
 bool LienvCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *) const {
     return targets.isEmpty() && to_select->isWounded();
 }
@@ -1295,11 +1266,8 @@ YunEXPackage::YunEXPackage()
     :Package("yunEX")
 {
     General *EXliyunpeng = new General(this, "EXliyunpeng", "wu", 3, true); // YunEX 001
-    General *EXliyunpeng_female = new General(this, "EXliyunpeng_female", "wu", 3, false, true, true); // YunEX 001
     EXliyunpeng->addSkill(new Lanyan);
     EXliyunpeng->addSkill(new Lienv);
-    EXliyunpeng_female->addSkill("lanyan");
-    EXliyunpeng_female->addSkill("lienv");
 
     General *EXhuaibeibei = new General(this, "EXhuaibeibei$", "wu", 4, false); // YunEX 002
     EXhuaibeibei->addSkill("hongyan");
@@ -1322,3 +1290,4 @@ YunEXPackage::YunEXPackage()
 }
 
 ADD_PACKAGE(YunEX)
+

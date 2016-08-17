@@ -513,7 +513,8 @@ void RoomScene::handleGameEvent(const QVariant &args)
         player->setGender(gender);
 
         PlayerCardContainer *container = (PlayerCardContainer*)_getGenericCardContainer(Player::PlaceHand, player);
-        container->updateAvatar(); // For Lu Boyan
+        // For EXliyunpeng
+        container->updateSmallAvatar();
         break;
     }
     case S_GAME_EVENT_CHANGE_HERO: {

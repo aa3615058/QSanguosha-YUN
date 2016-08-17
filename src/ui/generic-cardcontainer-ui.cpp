@@ -210,9 +210,10 @@ void PlayerCardContainer::updateAvatar()
     if (general != NULL) {
         _m_avatarArea->setToolTip(m_player->getSkillDescription());
         QString name = general->objectName();
-        // for luboyan
-        if (name == "luboyan" && m_player->isFemale())
-            name = "luboyanf";
+        // for EXliyunpeng
+        if (name == "EXliyunpeng" && m_player->getMark("lanyan") > 0) {
+            name = "EXliyunpeng_female";
+        }
         QPixmap avatarIcon = _getAvatarIcon(name);
         _paintPixmap(_m_avatarIcon, _m_layout->m_avatarArea, avatarIcon, _getAvatarParent());
         // this is just avatar general, perhaps game has not started yet.
@@ -263,14 +264,19 @@ void PlayerCardContainer::updateSmallAvatar()
     const General *general = NULL;
     if (m_player) general = m_player->getGeneral2();
     if (general != NULL) {
-        QPixmap smallAvatarIcon = G_ROOM_SKIN.getGeneralPixmap(general->objectName(), QSanRoomSkin::GeneralIconSize(_m_layout->m_smallAvatarSize));
+        _m_smallAvatarArea->setToolTip(m_player->getSkillDescription());
+        QString avatarName = general->objectName();
+        // for EXliyunpeng
+        if (avatarName == "EXliyunpeng" && m_player->getMark("lanyan") > 0) {
+            avatarName = "EXliyunpeng_female";
+        }
+        QPixmap smallAvatarIcon = G_ROOM_SKIN.getGeneralPixmap(avatarName, QSanRoomSkin::GeneralIconSize(_m_layout->m_smallAvatarSize));
         smallAvatarIcon = paintByMask(smallAvatarIcon);
         _paintPixmap(_m_smallAvatarIcon, _m_layout->m_smallAvatarArea,
             smallAvatarIcon, _getAvatarParent());
         _paintPixmap(_m_circleItem, _m_layout->m_circleArea,
             QString(QSanRoomSkin::S_SKIN_KEY_GENERAL_CIRCLE_IMAGE).arg(_m_layout->m_circleImageSize),
             _getAvatarParent());
-        _m_smallAvatarArea->setToolTip(m_player->getSkillDescription());
         QString name = Sanguosha->translate("&" + general->objectName());
         if (name.startsWith("&"))
             name = Sanguosha->translate(general->objectName());
