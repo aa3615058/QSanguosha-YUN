@@ -707,6 +707,144 @@ public:
     }
 };
 
+class Tiancheng4 : public RetrialSkill {
+public:
+    Tiancheng4() : RetrialSkill("tiancheng4") {}
+    const Card *onRetrial(ServerPlayer *player, JudgeStruct *judge) const {
+        Room *room = player->getRoom();
+
+        if(player->askForSkillInvoke(this, QVariant::fromValue(judge))) {
+            room->notifySkillInvoked(player, objectName());
+            QList<int> ids = room->getNCards(1, false);
+            const Card *card = Sanguosha->getCard(ids.first());
+            return card;
+        }
+    }
+};
+
+class Zhaoxi : public PhaseChangeSkill {
+public:
+    Zhaoxi() : PhaseChangeSkill("zhaoxi$")
+    {
+        frequency = Wake;
+    }
+
+    bool triggerable(const ServerPlayer *target) const
+    {
+        return target != NULL && target->getPhase() == Player::Start
+            && target->hasLordSkill("zhaoxi")
+            && target->isAlive()
+            && target->getMark("zhaoxi") == 0;
+    }
+
+    bool onPhaseChange(ServerPlayer *player) const
+    {
+        Room *room = player->getRoom();
+
+        bool can_invoke = true;
+        foreach (ServerPlayer *p, room->getAllPlayers()) {
+            if (player->getHp() > p->getHp()) {
+                can_invoke = false;
+                break;
+            }
+        }
+
+        if (can_invoke) {
+            room->notifySkillInvoked(player, objectName());
+
+            LogMessage log;
+            log.type = "#zhaoxiWake";
+            log.from = player;
+            log.arg = QString::number(player->getHp());
+            log.arg2 = objectName();
+            room->sendLog(log);
+
+            if (!player->isLord() && player->hasSkill("weidi")) {
+                room->broadcastSkillInvoke("weidi");
+                QString generalName = "yuanshu";
+
+                room->doSuperLightbox(generalName, "zhaoxi");
+            } else {
+                //room->broadcastSkillInvoke(objectName());
+                room->doSuperLightbox("zhaowenting", "zhaoxi");
+            }
+
+            room->setPlayerMark(player, "zhaoxi", 1);
+            if (room->changeMaxHpForAwakenSkill(player, 1)) {
+                room->recover(player, RecoverStruct(player));
+                if (player->getMark("zhaoxi") == 1 && player->isLord())
+                    room->acquireSkill(player, "lizan");
+            }
+        }
+
+        return false;
+    }
+};
+
+class Lizan : public TriggerSkill
+{
+public:
+    Lizan() : TriggerSkill("lizan$")
+    {
+        events << FinishJudge << EventPhaseChanging;
+    }
+
+    bool triggerable(const ServerPlayer *target) const
+    {
+        return target != NULL;
+    }
+
+    bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const
+    {
+        if(triggerEvent == FinishJudge && room->getCurrent()->isMale()) {
+            JudgeStruct *judge = data.value<JudgeStruct *>();
+            const Card *card = judge->card;
+
+            if (card->isRed()) {
+                QList<ServerPlayer *> wentings;
+                foreach (ServerPlayer *p, room->getOtherPlayers(player)) {
+                    if (p->hasLordSkill(this) && !(p->hasFlag(objectName()))) {
+                        wentings << p;
+                    }
+                }
+
+                while (!wentings.isEmpty()) {
+                    ServerPlayer *wenting = room->askForPlayerChosen(player, wentings, objectName(), "@lizan-to", true);
+                    if (wenting) {
+                        if (!wenting->isLord() && wenting->hasSkill("weidi"))
+                            room->broadcastSkillInvoke("weidi");
+                        else
+                            //room->broadcastSkillInvoke(objectName(), player->isMale() ? 1 : 2);
+
+                        room->notifySkillInvoked(wenting, objectName());
+
+                        LogMessage log;
+                        log.type = "#InvokeOthersSkill";
+                        log.from = player;
+                        log.to << wenting;
+                        log.arg = objectName();
+                        room->sendLog(log);
+
+                        wenting->drawCards(1, objectName());
+                        wentings.removeOne(wenting);
+                        room->setPlayerFlag(wenting, objectName());
+                    } else
+                        break;
+                }
+            }
+        } else if(triggerEvent == EventPhaseChanging && data.value<PhaseChangeStruct>().to == Player::NotActive) {
+            QList<ServerPlayer *> players = room->getAlivePlayers();
+            foreach(ServerPlayer* p, players) {
+                if(p->hasFlag(objectName())) {
+                    room->setPlayerFlag(p, "-" + objectName());
+                }
+            }
+        }
+
+        return false;
+    }
+};
+
 YunPackage::YunPackage()
     :Package("yun")
 {
@@ -736,10 +874,18 @@ YunPackage::YunPackage()
     lishuyu->addSkill(new Yingzhou);
     lishuyu->addSkill(new Qifeng);
 
+    General *zhaowenting = new General(this, "zhaowenting$", "qun", 3, false); // Yun 001
+    zhaowenting->addSkill(new Tiancheng4);
+    zhaowenting->addSkill("biyue");
+    zhaowenting->addSkill(new Zhaoxi);
+    zhaowenting->addRelateSkill("lizan");
+
     addMetaObject<QiaopoCard>();
     addMetaObject<XingcanCard>();
     addMetaObject<MiyuCard>();
     addMetaObject<QifengCard>();
+
+    skills << new Lizan;
 }
 
 ADD_PACKAGE(Yun)
@@ -1273,10 +1419,13 @@ YunEXPackage::YunEXPackage()
     EXhuaibeibei->addSkill("hongyan");
     EXhuaibeibei->addSkill(new Yige);
     EXhuaibeibei->addSkill(new Jianmei);
+    EXhuaibeibei->addRelateSkill("tiancheng");
 
     General *EXhanjing = new General(this, "EXhanjing", "wu", 3, false); // YunEX 003
     EXhanjing->addSkill(new Duanyan);
     EXhanjing->addSkill(new Pingfeng);
+    EXhanjing->addRelateSkill("feiying");
+    EXhanjing->addRelateSkill("liuli");
 
     General *EXxiaosa = new General(this, "EXxiaosa", "wei", 4, false); // YunEX 004
     EXxiaosa->addSkill(new Leiya);

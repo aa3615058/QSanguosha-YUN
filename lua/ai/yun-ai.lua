@@ -331,3 +331,21 @@ sgs.ai_skill_use["@@miyu"] = function(self, prompt)
 	end
 	return "@MiyuCard=.->" .. table.concat(targetTable, "+")
 end
+
+sgs.ai_skill_playerchosen.lizan = function(self, targets)
+	targets = sgs.QList2Table(targets)
+	for _, target in ipairs(targets) do
+		if self:isFriend(target) and target:isAlive() then
+			return target
+		end
+	end
+	return nil
+end
+sgs.ai_playerchosen_intention.lizan = -50
+
+sgs.ai_skill_invoke.tiancheng4 = function(self, data)
+	local judge = data:toJudge()
+	if self.room:getMode():find("_mini_46") and not judge:isGood() then return true end
+	if self:needRetrial(judge) then return true	end
+	return false
+end

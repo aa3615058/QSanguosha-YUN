@@ -81,4 +81,18 @@ return {
 	["@qifeng-discard"] = "请弃置一张红色牌，否则将会受到转移的伤害",
 	["@qifeng"] = "请指定受伤害角色外的一名其他角色，发动“奇风”",
 	["~qifeng"] = "选择目标 → 目标选择是否弃牌 → 弃牌 或 不弃牌转移伤害",
+
+	["#zhaowenting"] = "抹香鲸",
+	["zhaowenting"] = "赵文婷",
+	["designer:zhaowenting"] = "飞哥",
+	["cv:zhaowenting"] = "——",
+	["illustrator:zhaowenting"] = "——",
+	["tiancheng4"] = "天秤",
+	[":tiancheng4"] = "一名角色的判定牌生效前，你可以从牌堆顶翻出一张牌代替之。",
+	["zhaoxi"] = "朝夕",
+	[":zhaoxi"] = "主公技，觉醒技，准备阶段，若你是体力值最小的角色，你加1点体力上限，回复1点体力，然后获得技能“礼赞”。",
+	["lizan"] = "礼赞",
+	[":lizan"] = "主公技，每名男性角色的回合限一次，其他角色的判定牌为红色时，可以令你摸一张牌。",
+	["#zhaoxiWake"] = "%from 的体力值为 <font color=\"yellow\"><b>%arg</b></font>，触发技能 %arg2 觉醒",
+	["@lizan-to"] = "请选择“礼赞”的目标角色",
 }
