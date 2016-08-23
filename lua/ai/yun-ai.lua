@@ -341,7 +341,6 @@ sgs.ai_skill_playerchosen.lizan = function(self, targets)
 	end
 	return nil
 end
-sgs.ai_playerchosen_intention.lizan = -50
 
 sgs.ai_skill_invoke.tiancheng4 = function(self, data)
 	local judge = data:toJudge()
@@ -349,3 +348,7 @@ sgs.ai_skill_invoke.tiancheng4 = function(self, data)
 	if self:needRetrial(judge) then return true	end
 	return false
 end
+
+sgs.ai_skill_invoke.xianjian = true
+sgs.ai_skill_playerchosen.xianjian = sgs.ai_skill_playerchosen.slash_extra_targets
+sgs.ai_skill_invoke.qixia = true

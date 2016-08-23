@@ -230,6 +230,7 @@ bool Player::inMyAttackRange(const Player *other, int distance_fix) const
     }
 
     // end
+
     if (attack_range_pair.contains(other)) return true;
     return this != other && distanceTo(other, distance_fix) <= getAttackRange();
 }

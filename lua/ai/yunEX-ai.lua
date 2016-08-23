@@ -52,7 +52,7 @@ sgs.ai_skill_use["@@lienv"] = function(self, prompt)
 	local target = nil
 
 	if #arr1 > 0 and (self:isWeak(arr1[1]) or self:getOverflow() >= 1) and arr1[1]:getHp() < getBestHp(arr1[1]) then target = arr1[1] end
-	if self:getOverflow() > 0 and #arr1 > 0 then
+	if self:getOverflow() >= 0 and #arr1 > 0 then
 		for _, friend in ipairs(arr1) do
 			if not friend:hasSkills("hunzi|longhun") then
 				target = friend
@@ -78,6 +78,3 @@ sgs.ai_skill_playerchosen.jianmei = function(self, targets)
 	end
 	return nil
 end
-sgs.ai_playerchosen_intention.jianmei = -50
-
-

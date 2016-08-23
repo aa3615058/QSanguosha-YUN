@@ -845,6 +845,89 @@ public:
     }
 };
 
+class Xianjian : public TriggerSkill
+{
+public:
+    Xianjian() : TriggerSkill("xianjian")
+    {
+        events << CardUsed << FinishJudge << EventPhaseChanging;
+    }
+
+    bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const
+    {
+        if(triggerEvent == CardUsed) {
+            CardUseStruct use = data.value<CardUseStruct>();
+            if (!player->hasFlag(objectName()) && use.card->isKindOf("Slash") && player->getPhase() == Player::Play) {
+                bool invoke = false;
+                while (use.from->askForSkillInvoke(this, data)) {
+                    invoke = true;
+                    JudgeStruct judge;
+                    judge.good = true;
+                    judge.reason = objectName();
+                    judge.who = player;
+                    room->judge(judge);
+
+                    if(player->tag["xianjian-judge"].toBool()) {
+                        QList<ServerPlayer *> targets;
+                        foreach(ServerPlayer* p, room->getAlivePlayers()) {
+                            if(p != player && !(use.to.contains(p)) && player->canSlash(p)) {
+                                targets << p;
+                            }
+                        }
+                        if(targets.empty()){
+                            break;
+                        }
+                        ServerPlayer *target = room->askForPlayerChosen(player, targets, objectName(), "#xianjian-more-target", true, true);
+                        if(target != NULL) {
+                            use.to.append(target);
+                        }else {
+                            break;
+                        }
+                    }else break;
+                }
+                if(invoke) {
+                    room->sortByActionOrder(use.to);
+                    data.setValue(use);
+                    room->setPlayerFlag(player, objectName());
+                }
+            }
+        }else if(triggerEvent == FinishJudge) {
+            JudgeStruct *judge = data.value<JudgeStruct *>();
+            if (judge->reason == objectName()) {
+                bool isBlack = judge->card->isBlack();
+                if(!isBlack) player->obtainCard(judge->card);
+                player->tag["xianjian-judge"] = QVariant::fromValue(isBlack);
+            }
+        }else if(triggerEvent == EventPhaseChanging) {
+            if(data.value<PhaseChangeStruct>().to == Player::Play) {
+                room->setPlayerFlag(player, "-" + objectName());
+            }
+        }
+
+        return false;
+    }
+};
+
+class Qixia : public TriggerSkill {
+public:
+    Qixia() : TriggerSkill("qixia")
+    {
+        events << Dying;
+    }
+
+    bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const
+    {
+        QList<ServerPlayer*> feiges = room->findPlayersBySkillName(objectName());
+        foreach(ServerPlayer* feige, feiges) {
+            if(room->askForSkillInvoke(feige, objectName(), data)) {
+                data.value<DyingStruct>().who->drawCards(1, objectName());
+                feige->drawCards(1, objectName());
+            }
+        }
+        return false;
+    }
+};
+
 YunPackage::YunPackage()
     :Package("yun")
 {
@@ -879,6 +962,10 @@ YunPackage::YunPackage()
     zhaowenting->addSkill("biyue");
     zhaowenting->addSkill(new Zhaoxi);
     zhaowenting->addRelateSkill("lizan");
+
+    General *liyunpeng = new General(this, "liyunpeng", "qun", 3); //Yun 003
+    liyunpeng->addSkill(new Xianjian);
+    liyunpeng->addSkill(new Qixia);
 
     addMetaObject<QiaopoCard>();
     addMetaObject<XingcanCard>();
