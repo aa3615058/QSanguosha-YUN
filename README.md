@@ -8,7 +8,7 @@ I develop this project also for commemoration to my college life.
 <table>
   <tbody>
     <tr>
-      <td width="340"><img src="https://github.com/aa3615058/YUNCardImages/blob/master/card-output/YUN006huaibeibeiskin6.jpg" width="320" height="450"/></td>
+      <td width="340"><img src="https://github.com/aa3615058/YUNCardImages/blob/master/card-output/YUN006huaibeibeiskin5.jpg" width="320" height="450"/></td>
       <td>
         <b>红颜</b>：锁定技，你的黑桃牌视为红桃牌。<br>
         <b>天成</b>：每当你使用或打出一张手牌时，或你的判定牌生效后，若触发了技能“红颜”，你可以摸一张牌。若此时是你的出牌阶段且你本阶段已发动“天成”的次数为奇数，将“摸一张牌”改为“令本回合你的手牌上限+1”。
@@ -46,7 +46,7 @@ I develop this project also for commemoration to my college life.
       <td width="340"><img src="https://github.com/aa3615058/YUNCardImages/blob/master/card-output/YUN011lishuyuskin1.jpg" width="320" height="450"/></td>
       <td>
         <b>影咒</b>：出牌阶段限一次，若你本阶段上一张使用或打出的牌是基本牌或非延时类锦囊牌，你可以将一张手牌当做这张牌使用或打出。<br>
-        <b>奇风</b>：每当你对一名角色造成伤害时，你可以令另一名其他角色弃置一张红色手牌，否则将伤害转移之且此技能失效直至回合结束。（转移的伤害不能发动“奇风”）
+        <b>奇风</b>：每当你对其他角色造成伤害时，你可以令另一名其他角色弃置一张红色手牌，否则将伤害转移之（转移的伤害不能发动“奇风”）
       </td>
     </tr>
   </tbody>
@@ -60,11 +60,11 @@ I develop this project also for commemoration to my college life.
       <td width="340"><img src="https://github.com/aa3615058/YUNCardImages/blob/master/card-output/YUNEX001liyunpeng.jpg" width="320" height="450"/></td>
       <td>
         <b>蓝颜</b>：锁定技，你的回合外，你的性别视为女。<br>
-        <b>烈女</b>：每当你受到异性角色造成的一次伤害后，或你对同性角色造成一次伤害后，你可以进行一次判定，若结果为黑色，你将此牌交给一名角色；若结果为红色，你可以弃置一张牌令一名已受伤的角色回复一点体力。
+        <b>烈女</b>：每当你受到异性角色造成的一次伤害后，或你对同性角色造成一次伤害后，你可以进行一次判定，若结果为黑色，你获得此牌；若结果为红色，你可以弃置一张牌令一名已受伤的角色回复一点体力。
       </td>
     </tr>
     <tr>
-      <td width="340"><img src="https://github.com/aa3615058/YUNCardImages/blob/master/card-output/YUNEX002huaibeibei.jpg" width="320" height="450"/></td>
+      <td width="340"><img src="https://github.com/aa3615058/YUNCardImages/blob/master/card-output/YUNEX002huaibeibeifullskin.jpg" width="320" height="450"/></td>
       <td>
         <b>红颜</b>：锁定技，你的黑桃牌视为红桃牌。<br>
         <b>亦歌</b>：准备阶段开始时，你可以选择一名其他女性角色，直到你下次触发该技能：你可以选择拥有该角色的一项技能（除主公技、限定技与觉醒技），你可以令该角色拥有技能“红颜”。游戏开始时，若场上没有其他女性角色，你可以失去技能“亦歌”和“兼美”，获得技能“天成”。<br>
@@ -72,7 +72,7 @@ I develop this project also for commemoration to my college life.
       </td>
     </tr>
     <tr>
-      <td width="340"><img src="https://github.com/aa3615058/YUNCardImages/blob/master/card-output/YUNEX003hanjing.jpg" width="320" height="450"/></td>
+      <td width="340"><img src="https://github.com/aa3615058/YUNCardImages/blob/master/card-output/YUNEX003hanjingfullskin.jpg" width="320" height="450"/></td>
       <td>
         <b>断雁</b>：一名男性角色的准备阶段开始时，你可以交给其一张方块牌，这名角色受到你造成的1点伤害并摸X张牌，X为这名角色与你的距离的一半（向下取整）。<br>
         <b>凭风</b>：锁定技，你的装备区没有牌时，视为你拥有技能“飞影”；你的装备区有牌时，视为你拥有技能“流离”。
