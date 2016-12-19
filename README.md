@@ -43,10 +43,10 @@ I develop this project also for commemoration to my college life.
       </td>
     </tr>
     <tr>
-      <td width="340"><img src="https://github.com/aa3615058/YUNCardImages/blob/master/card-output/YUN011lishuyuskin1.jpg" width="320" height="450"/></td>
+      <td width="340"><img src="https://github.com/aa3615058/YUNCardImages/blob/master/card-output/YUN011lishuyuskin2.jpg" width="320" height="450"/></td>
       <td>
         <b>影咒</b>：出牌阶段限一次，若你本阶段上一张使用或打出的牌是基本牌或非延时类锦囊牌，你可以将一张手牌当做这张牌使用或打出。<br>
-        <b>奇风</b>：每当你对其他角色造成伤害时，你可以令另一名其他角色弃置一张红色手牌，否则将伤害转移之（转移的伤害不能发动“奇风”）
+        <b>奇风</b>：每当你对其他角色造成伤害时，你可以令另一名其他角色弃置一张红色手牌，否则将伤害转移之。（转移的伤害不能发动“奇风”）
       </td>
     </tr>
   </tbody>
