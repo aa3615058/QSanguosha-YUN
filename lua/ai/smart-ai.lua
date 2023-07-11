@@ -257,6 +257,8 @@ function sgs.getDefense(player)
     if player:getDefensiveHorse() then defense = defense + 1 end
 
     if player:hasTreasure("wooden_ox") then defense = defense + player:getPile("wooden_ox"):length() end
+	
+	if player:getPile("&wire") then defense = defense + player:getPile("&wire"):length() end
 
     local hasEightDiagram = false
     if player:hasArmorEffect("eight_diagram") or (player:hasSkill("bazhen") and not player:getArmor())    then
@@ -4128,6 +4130,10 @@ function SmartAI:getTurnUse()
         if c:isAvailable(self.player) then table.insert(cards, c) end
     end
     for _, id in sgs.qlist(self.player:getPile("wooden_ox")) do
+        local c = sgs.Sanguosha:getCard(id)
+        if c:isAvailable(self.player) then table.insert(cards, c) end
+    end
+	for _, id in sgs.qlist(self.player:getPile("&wire")) do
         local c = sgs.Sanguosha:getCard(id)
         if c:isAvailable(self.player) then table.insert(cards, c) end
     end

@@ -357,7 +357,7 @@ void GeneralOverview::fillGenerals(const QList<const General *> &generals, bool 
         }
 
         if (general->getPackage().compare("yun") == 0 || general->getPackage().compare("yunEX") == 0) {
-            package_item->setBackgroundColor(QColor(0x66, 0xCC, 0xFF));
+            package_item->setBackgroundColor(QColor(0x00, 0xFF, 0xCC));
         }
 
         ui->tableWidget->setItem(i, 0, nickname_item);

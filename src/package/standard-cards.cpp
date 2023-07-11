@@ -370,7 +370,7 @@ bool Slash::targetFilter(const QList<const Player *> &targets, const Player *to_
     }
 
     if (Self->hasSkill("zhangui") && Self->getPhase() == Player::Play) {
-        if(!(Self->hasFlag("slashUsed"))) {
+        if(!(Self->hasFlag("zhanguiSlashUsed"))) {
             slash_targets += 2;
         }
 

@@ -48,18 +48,25 @@ sgs.ai_skill_use["@@lienv"] = function(self, prompt)
 	end
 
 	--筛选对象
-	local arr1 = self:getWoundedFriend(false, true)
+	self:sort(self.friends, "defense")
 	local target = nil
+	
+	for _, friend in ipairs(self.friends) do
+		if not friend:hasSkills("hunzi|longhun") and friend:getGender()==self.player:getGender() then
+			target = friend
+			break
+		end
+	end
 
-	if #arr1 > 0 and (self:isWeak(arr1[1]) or self:getOverflow() >= 1) and arr1[1]:getHp() < getBestHp(arr1[1]) then target = arr1[1] end
+	--[[if #arr1 > 0 and (self:isWeak(arr1[1]) or self:getOverflow() >= 1) and arr1[1]:getHp() < getBestHp(arr1[1]) then target = arr1[1] end
 	if self:getOverflow() >= 0 and #arr1 > 0 then
 		for _, friend in ipairs(arr1) do
-			if not friend:hasSkills("hunzi|longhun") then
+			if not friend:hasSkills("hunzi|longhun") and friend:getGender()==self:getGender() then
 				target = friend
 				break
 			end
 		end
-	end
+	end]]--
 
 	if card and target then
 		return "@LienvCard=" .. card .. "->" .. target:objectName()

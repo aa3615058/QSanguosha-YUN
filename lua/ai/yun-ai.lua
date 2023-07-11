@@ -198,6 +198,8 @@ function sgs.ai_slash_prohibit.qiaopo(self, from, to)
 	return self:cantbeHurt(to, from)
 end
 
+sgs.ai_skill_invoke.siwu = true
+
 --“潇寒（雷杀）”跟“符箓”的AI是一样的
 sgs.ai_view_as.xiaohan_thunder_slash = function(card, player, card_place)
 	local suit = card:getSuitString()
@@ -331,24 +333,3 @@ sgs.ai_skill_use["@@miyu"] = function(self, prompt)
 	end
 	return "@MiyuCard=.->" .. table.concat(targetTable, "+")
 end
-
-sgs.ai_skill_playerchosen.lizan = function(self, targets)
-	targets = sgs.QList2Table(targets)
-	for _, target in ipairs(targets) do
-		if self:isFriend(target) and target:isAlive() then
-			return target
-		end
-	end
-	return nil
-end
-
-sgs.ai_skill_invoke.tiancheng4 = function(self, data)
-	local judge = data:toJudge()
-	if self.room:getMode():find("_mini_46") and not judge:isGood() then return true end
-	if self:needRetrial(judge) then return true	end
-	return false
-end
-
-sgs.ai_skill_invoke.xianjian = true
-sgs.ai_skill_playerchosen.xianjian = sgs.ai_skill_playerchosen.slash_extra_targets
-sgs.ai_skill_invoke.qixia = true

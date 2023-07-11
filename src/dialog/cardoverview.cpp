@@ -113,7 +113,7 @@ void CardOverview::addCard(int i, const Card *card)
     }
 
     if (card->getPackage().compare("yuncard") == 0) {
-        package_item->setBackgroundColor(QColor(0x66, 0xCC, 0xFF));
+        package_item->setBackgroundColor(QColor(0x00, 0xFF, 0xCC));
     }
 
     ui->tableWidget->setItem(i, 5, package_item);
