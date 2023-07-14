@@ -112,7 +112,7 @@ void CardOverview::addCard(int i, const Card *card)
         package_item->setToolTip(tr("This is an Lua extension"));
     }
 
-    if (card->getPackage().compare("yuncard") == 0) {
+    if (card->getPackage().compare("yun") == 0) {
         package_item->setBackgroundColor(QColor(0x00, 0xFF, 0xCC));
     }
 

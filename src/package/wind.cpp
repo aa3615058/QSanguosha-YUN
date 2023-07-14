@@ -96,13 +96,7 @@ public:
             if (judge.isBad()) {
                 Card::Suit suit = judge.card->getSuit();
                 if (suit == Card::Spade) {
-                    DamageStruct damage;
-                    damage.from = player;
-                    damage.to = victim;
-                    damage.reason = "leiji";
-                    damage.damage = 2;
-                    damage.nature = DamageStruct::Thunder;
-                    room->damage(damage);
+                    room->damage(DamageStruct(objectName(),player,victim,2,DamageStruct::Thunder));
                 }
                 else if (suit == Card::Club) {
                     if (player->getLostHp() > 0) {
@@ -111,13 +105,7 @@ public:
                         recover.recover = 1;
                         room->recover(player, recover);
                     }
-                    DamageStruct damage;
-                    damage.from = player;
-                    damage.to = victim;
-                    damage.reason = "leiji";
-                    damage.damage = 1;
-                    damage.nature = DamageStruct::Thunder;
-                    room->damage(damage);
+                    room->damage(DamageStruct(objectName(),player,victim,1,DamageStruct::Thunder));
                 }
             }
         }

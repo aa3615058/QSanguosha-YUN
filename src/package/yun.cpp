@@ -160,19 +160,6 @@ public:
 
 };
 
-YunCardPackage::YunCardPackage()
-    : Package("yuncard", Package::CardPack) {
-    QList<Card *> cards;
-    cards << new LureTiger(Card::Heart, 2);
-
-    skills << new LureTigerProhibit << new LureTigerLockHPSkill << new LureTigerSkill ;
-    insertRelatedSkills("lure_tiger-effect", "#lure_tiger-prohibit");
-    insertRelatedSkills("lure_tiger-effect", "#lure_tiger-lockHP");
-
-    cards.first()->setParent(this);
-}
-ADD_PACKAGE(YunCard)
-
 class Tiancheng : public TriggerSkill {
 public:
      Tiancheng() : TriggerSkill("tiancheng") {
@@ -739,6 +726,15 @@ YunPackage::YunPackage()
     addMetaObject<QiaopoCard>();
     addMetaObject<MiyuCard>();
     addMetaObject<QifengCard>();
+
+    QList<Card *> cards;
+    cards << new LureTiger(Card::Heart, 2);
+
+    skills << new LureTigerProhibit << new LureTigerLockHPSkill << new LureTigerSkill;
+    insertRelatedSkills("lure_tiger-effect", "#lure_tiger-prohibit");
+    insertRelatedSkills("lure_tiger-effect", "#lure_tiger-lockHP");
+
+    cards.first()->setParent(this);
 }
 
 ADD_PACKAGE(Yun)
@@ -1176,7 +1172,7 @@ public:
         response_pattern = "@@leiya";
     }
     const Card *viewAs() const {
-        IronChain* card = new IronChain(Card::Spade, 0);
+        IronChain* card = new IronChain(Card::NoSuitBlack, 0);
         card->setSkillName(objectName());
         return card;
     }
@@ -1230,7 +1226,7 @@ class Zhenyue : public TriggerSkill
 public:
     Zhenyue() : TriggerSkill("zhenyue")
     {
-        events << EventPhaseStart << CardUsed;
+        events << EventPhaseChanging << CardUsed;
         view_as_skill = new ZhenyueViewAsSkill;
 
         frequency = Limited;
@@ -1240,7 +1236,7 @@ public:
     bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const
     {
         if(player->getMark("@zhenyue")==0) return false;
-        if (event == EventPhaseStart && player->getPhase() == Player::Start && !player->isSkipped(Player::Draw) && !player->isSkipped(Player::Play) && !player->isSkipped(Player::Discard)) {
+        if (event == EventPhaseChanging && data.value<PhaseChangeStruct>().to == Player::Draw && !player->isSkipped(Player::Draw) && !player->isSkipped(Player::Play) && !player->isSkipped(Player::Discard)) {
             if (Slash::IsAvailable(player)) {
                 int x = player->getLostHp() / 2 + player->getLostHp() % 2;
 

@@ -22,8 +22,7 @@ config = {
 		oppphskill = "#008000",
 	},
 
-	package_names = {
-		"YunCard",
+        package_names = {
 		"StandardCard",
 		"StandardExCard",
 		"Maneuvering",

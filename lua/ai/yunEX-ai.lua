@@ -52,7 +52,7 @@ sgs.ai_skill_use["@@lienv"] = function(self, prompt)
 	local target = nil
 	
 	for _, friend in ipairs(self.friends) do
-		if not friend:hasSkills("hunzi|longhun") and friend:getGender()==self.player:getGender() then
+		if friend:isWounded() and friend:getGender()==self.player:getGender() and not friend:hasSkills("hunzi|longhun") then
 			target = friend
 			break
 		end

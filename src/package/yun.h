@@ -6,14 +6,6 @@
 #include "skill.h"
 #include "standard.h"
 
-class YunCardPackage : public Package
-{
-    Q_OBJECT
-
-public:
-    YunCardPackage();
-};
-
 class LureTiger : public TrickCard
 {
     Q_OBJECT
