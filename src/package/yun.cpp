@@ -543,14 +543,19 @@ public:
     }
     bool isEnabledAtPlay(const Player *player) const {
         if(player->hasFlag("yingzhouEffect")) {
-            //这里只检测了【杀】的可用性，其实应该所有牌都检测一遍，但是那样就要用到反射机制，C++并不支持
-            //这只是个显示缺陷，实际执行效果是正确的。按钮亮着，但是如果牌被封，就算去点，仍然无法使用
+            //这里只好用这种方式进行检测，C++没有Java的反射机制
+            //这里只检测【杀】，【酒】
+            //这里就算写得有问题，也不会导致逻辑错误。顶多是显示缺陷，即按钮亮着，牌无法使用。
             if(player->property("yingzhouCard").toString().contains("Slash")) return Slash::IsAvailable(player);
+            else if(player->property("yingzhouCard").toString().contains("Analeptic")) return Analeptic::IsAvailable(player);
             else return true;
         }
         return false;
     }
     bool isEnabledAtResponse(const Player *player, const QString &pattern) const {
+        if(player->getPhase() == Player::Play) {
+            return pattern.contains(player->property("yingzhouCard").toString().toLower());
+        }
         return false;
     }
     bool isEnabledAtNullification(const ServerPlayer *player) const {
