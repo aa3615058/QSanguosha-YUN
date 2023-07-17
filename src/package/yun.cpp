@@ -169,7 +169,7 @@ public:
      bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const
      {
         const Card *card = NULL;
-        const QString tianchengKeepMark = "@hongyantiancheng";
+        const QString tianchengkeepMark = "@hongyantiancheng";
         const QString tianchengTriggeredFlag = "tianchengTriggered";
 
         if (triggerEvent == CardResponded) {
@@ -180,7 +180,7 @@ public:
             card = data.value<JudgeStruct *>()->card;
         } else if(triggerEvent == EventPhaseChanging) {
             if(data.value<PhaseChangeStruct>().to == Player::NotActive) {
-                 player->loseAllMarks(tianchengKeepMark);
+                 player->loseAllMarks(tianchengkeepMark);
                  return false;
             }
         }
@@ -205,7 +205,7 @@ public:
                 player->drawCards(1, objectName());
                 if(player->getPhase() == Player::Play) {
                     if(player->hasFlag(tianchengTriggeredFlag)) {
-                        player->gainMark(tianchengKeepMark);
+                        player->gainMark(tianchengkeepMark);
                         room->askForDiscard(player, objectName(), 1, 1, false, true);
                     } else {
                         player->setFlags(tianchengTriggeredFlag);
@@ -217,9 +217,9 @@ public:
      }
 };
 
-class TianchengKeep : public MaxCardsSkill {
+class tianchengkeep : public MaxCardsSkill {
 public:
-    TianchengKeep() : MaxCardsSkill("#tianchengKeep") {
+    tianchengkeep() : MaxCardsSkill("#tianchengkeep") {
         frequency = Frequent;
     }
 
@@ -605,42 +605,54 @@ public:
     }
 };
 
-QifengCard::QifengCard(){}
+QifengCard::QifengCard() {
+
+}
 bool QifengCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const {
     return targets.length() < 1 && !to_select->hasFlag("qifeng_original");
 }
-void QifengCard::onEffect(const CardEffectStruct &effect) const {
-    ServerPlayer *target = effect.to;
-    Room *room = target->getRoom();
-    QVariant data = room->getTag("qifengdamage");
-    DamageStruct damage = data.value<DamageStruct>();
+bool QifengCard::targetsFeasible(const QList<const Player *> &targets, const Player *Self) const {
 
-    bool invoke_transfer = false;
+}
+void QifengCard::onEffect(const CardEffectStruct &effect) const {
+    Room *room = effect.from->getRoom();
+    DamageStruct damage = room->getTag("QifengDamage").value<DamageStruct>();
+
+    /*bool invoke_transfer = false;
     if (target->canDiscard(target, "h")) {
         if (!(room->askForDiscard(target, "qifeng", 1, 1, true, false, "@qifeng-discard", ".|heart|.|hand"))) {
             invoke_transfer = true;
         }
     }
-    else invoke_transfer = true;
-    if (invoke_transfer) {
-        DamageStruct damage2("qifeng", damage.from, target, damage.damage, damage.nature);
-        damage2.transfer = true;
-        damage2.transfer_reason = "qifeng";
+    else invoke_transfer = true;*/
+    //if (invoke_transfer) {
+    DamageStruct damage2(damage.reason, damage.from, effect.to, damage.damage, damage.nature);
+    damage2.transfer = true;
+    damage2.transfer_reason = "qifeng";
 
-        damage.damage = 0;
-        data.setValue(damage);
-        room->setTag("qifengdamage", data);
+    //damage.damage = 0;
+    //data.setValue(damage);
+    //room->setTag("qifengdamage", data);
 
-        room->damage(damage2);
-    }
+    room->damage(damage2);
+    //}
+    /*DamageStruct damage = effect.from->tag.value("QifengDamage").value<DamageStruct>();
+    ServerPlayer* ori = damage.to;
+    damage.to = effect.to;
+    damage.transfer = true;
+    damage.transfer_reason = "qifeng";
+    ori->tag["TransferDamage"] = QVariant::fromValue(damage);*/
 }
-class QifengViewAsSkill : public ZeroCardViewAsSkill {
+class QifengViewAsSkill : public OneCardViewAsSkill {
 public:
-    QifengViewAsSkill() : ZeroCardViewAsSkill("qifeng") {
+    QifengViewAsSkill() : OneCardViewAsSkill("qifeng") {
+        filter_pattern = ".|spade|.|hand!";
         response_pattern = "@@qifeng";
     }
-    const Card *viewAs() const {
-        return new QifengCard;
+    const Card *viewAs(const Card *originalCard) const {
+        QifengCard *card = new QifengCard;
+        card->addSubcard(originalCard);
+        return card;
     }
 };
 class Qifeng : public TriggerSkill {
@@ -651,26 +663,24 @@ public:
     }
 
     bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const {
+        //const Card* res = room->askForUseCard(player, "Jink", "@qifeng-card", -1, Card::MethodDiscard);
+        //const Card* res = room->askForUseCard(player, "@@qifeng", "@qifeng-card", -1, Card::MethodDiscard);
         DamageStruct damage = data.value<DamageStruct>();
-        ServerPlayer* target = damage.to;
-        bool transfer = false;
-        if (!(damage.transfer == true && damage.transfer_reason == objectName())) {
-            bool can_invoke = false;
-            QList<ServerPlayer *> players = room->getOtherPlayers(player);
-            players.removeOne(target);
-            can_invoke = (players.length() > 0) && (target != player);
-            if (can_invoke) {
-                room->setTag("qifengdamage", data);
-                room->setPlayerFlag(damage.to, "qifeng_original");
-                if (room->askForUseCard(player, "@@qifeng", "@qifeng")) {
-                    if (room->getTag("qifengdamage").value<DamageStruct>().damage == 0) {
-                        transfer = true;
-                    }
-                }
-                room->setPlayerFlag(damage.to, "-qifeng_original");
-            }
+        const Card* res = NULL;
+        if (damage.to != player && !(damage.transfer == true && damage.transfer_reason == objectName())) {
+            //QList<ServerPlayer *> players = room->getOtherPlayers(player);
+            //players.removeOne(target);
+            room->setTag("QifengDamage", data);
+            room->setPlayerFlag(damage.to, "qifeng_original");
+            //if (room->askForUseCard(player, "@@qifeng", "@qifeng", -1, Card::MethodDiscard)) {
+                //if (room->getTag("QifengDamage").value<DamageStruct>().damage == 0) {
+                //transfer = true;
+                //}
+            //}
+            res = room->askForUseCard(player, "@@qifeng", "@qifeng-card", -1, Card::MethodDiscard);
+            room->setPlayerFlag(damage.to, "-qifeng_original");
         }
-        return transfer;
+        return res;
     }
 };
 class QifengDraw : public TriggerSkill
@@ -701,8 +711,8 @@ YunPackage::YunPackage()
     General *huaibeibei = new General(this, "huaibeibei", "wu", 4, false); // Yun 006
     huaibeibei->addSkill("hongyan");
     huaibeibei->addSkill(new Tiancheng);
-    huaibeibei->addSkill(new TianchengKeep);
-    related_skills.insertMulti("tiancheng", "#tianchengKeep");
+    huaibeibei->addSkill(new tianchengkeep);
+    related_skills.insertMulti("tiancheng", "#tianchengkeep");
 
     General *hanjing = new General(this, "hanjing", "wu", 3, false); // Yun 007
     hanjing->addSkill(new Lianji);
