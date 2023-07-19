@@ -22,7 +22,7 @@ This project is also a commemoration of my college life.
       </td>
     </tr>
     <tr>
-      <td width="340"><img src="https://github.com/aa3615058/YUNCardImages/blob/master/card-output/YUN008wangcanskin1.jpg" width="320" height="450"/></td>
+      <td width="340"><img src="https://github.com/aa3615058/YUNCardImages/blob/master/card-output/YUN008wangcanskin2.jpg" width="320" height="450"/></td>
       <td>
         <b>丝舞</b>：当你受到 1 点伤害后，你可以摸一张牌，然后将一张手牌扣置于武将牌上，称为“丝”。你可以将“丝”如手牌般使用或打出。当你使用或打出一张牌时，若此牌不是你的手牌，你可以摸一张牌。<br>
         <b>星灿</b>：出牌阶段结束时，你可以将一张手牌置于牌堆顶，然后跳过弃牌阶段。
