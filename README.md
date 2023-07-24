@@ -22,21 +22,21 @@ This project is also a commemoration of my college life.
       </td>
     </tr>
     <tr>
-      <td width="340"><img src="https://github.com/aa3615058/YUNCardImages/blob/master/card-output/YUN008wangcanskin2.jpg" width="320" height="450"/></td>
+      <td width="340"><img src="https://github.com/aa3615058/YUNCardImages/blob/master/card-output/YUN008wangcan.jpg" width="320" height="450"/></td>
       <td>
         <b>丝舞</b>：当你受到 1 点伤害后，你可以摸一张牌，然后将一张手牌扣置于武将牌上，称为“丝”。你可以将“丝”如手牌般使用或打出。当你使用或打出一张牌时，若此牌不是你的手牌，你可以摸一张牌。<br>
         <b>星灿</b>：出牌阶段结束时，你可以将一张手牌置于牌堆顶，然后跳过弃牌阶段。
       </td>
     </tr>
     <tr>
-      <td width="340"><img src="https://github.com/aa3615058/YUNCardImages/blob/master/card-output/YUN009yangwenqiskin2.jpg" width="320" height="450"/></td>
+      <td width="340"><img src="https://github.com/aa3615058/YUNCardImages/blob/master/card-output/YUN009yangwenqi.jpg" width="320" height="450"/></td>
       <td>
         <b>战鬼</b>：出牌阶段，你使用的第一张【杀】可以多选择至多两名角色为目标。锁定技，你使用【杀】无距离限制，你使用【杀】的所有目标角色须座次连续且至少有一名目标角色与你座次相邻。<br>
         <b>调略</b>：你可以将一张红色手牌当【调虎离山】使用。当你使用的【调虎离山】结算结束后，你可以摸一张牌。
       </td>
     </tr>
     <tr>
-      <td width="340"><img src="https://github.com/aa3615058/YUNCardImages/blob/master/card-output/YUN010xiaosaskin2.jpg" width="320" height="450"/></td>
+      <td width="340"><img src="https://github.com/aa3615058/YUNCardImages/blob/master/card-output/YUN010xiaosa.jpg" width="320" height="450"/></td>
       <td>
         <b>潇寒</b>：你可以将一张普通【杀】当【雷杀】使用；当你对一名角色造成雷电伤害时，若该角色有牌，你可以防止此伤害，改为依次弃置其两张牌；锁定技，你是任何【闪电】造成伤害的来源。<br>
         <b>秘雨</b>：结束阶段，若你已受伤，你可以选择至多 X 名其他角色，视为这些角色各判定一次【闪电】。X 为你已损失体力值的一半（向上取整）。
